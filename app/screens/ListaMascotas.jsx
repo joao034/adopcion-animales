@@ -1,42 +1,66 @@
-import { View, Text, Button } from 'react-native'
-import React from 'react'
-import { FIREBASE_AUTH, FIREBASE_DB } from '../../FirebaseConfig'
+import {
+  Image,
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 
-const ListaMascotas = () => {
+import { useEffect, useState } from "react";
+import Perro from "../../assets/img/perro.png";
 
-  //recuperar el usuario logueado
-  const user = FIREBASE_AUTH.currentUser;
-  const getUserByEmail = async () => {
-    const usersCollection = FIREBASE_DB().collection('users');
-    //buscar el usuario en la base de datos
-    try {
-      const querySnapshot = await usersCollection.where('email', '===', user.email).get();
-  
-      if (querySnapshot.empty) {
-        // No se encontraron usuarios con este correo electrónico
-        return null;
-      } else {
-        // Recuperar el primer usuario encontrado (debería ser único)
-        const userDocument = querySnapshot.docs[0];
-        console.log(userDocument.data());
-        return userDocument.data();
-      }
-    } catch (error) {
-      console.error('Error al recuperar usuario por correo electrónico:', error);
-      throw error;
-    }
+import { getAnimales } from "../services/animalesService";
 
-  }
+import CustomCard from "../components/CustomCard";
+import CustomButton from "../components/CustomButton";
 
-  const userLogged = getUserByEmail();
-  
+const ListaMascotas = ( props ) => {
+
+  const [animales, setAnimales] = useState([]);
+
+  useEffect( async () => {
+    const dataAnimales = await getAnimales();
+    setAnimales(dataAnimales);
+  }, []);
+
+  useEffect(() => {
+    console.log("Animales:", animales);
+  }, [animales]);
 
   return (
-    <View>
-      <Text>Bienvenido {""}</Text>
-      <Button onPress={ () => FIREBASE_AUTH.signOut()} title="Salir"></Button>
-    </View>
-  )
-}
+    <ScrollView>
+      <CustomButton
+        title={"Agregar Animal"}
+        type={"SECONDARY"}
+        onPress={() => props.navigation.navigate("Create")}
+      >
+      </CustomButton>
 
-export default ListaMascotas
+      <View>
+        <FlatList
+          data={animales}
+          renderItem={({ item }) => (
+            <TouchableOpacity key={ item.id }
+              onPress={() => props.navigation.navigate("Show", { animalId: item.id } )}
+            >
+              <CustomCard>
+                <Text>{item.nombre}</Text>
+              </CustomCard>
+            </TouchableOpacity>
+          )}
+        />
+      </View>
+    </ScrollView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+});
+
+export default ListaMascotas;

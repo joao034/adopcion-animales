@@ -1,15 +1,12 @@
 import { View, TextInput, StyleSheet } from "react-native";
-import React from "react";
 
-
-
-const CustomInput = ( { placeholder, value, setValue, secureTextEntry, keyboardType="text"}) => {
+const CustomInput = ( { placeholder, value, setValue, onChangeText, secureTextEntry, keyboardType="text"}) => {
   return (
     <View style={styles.container}>
       <TextInput
         placeholder={placeholder}
         value={value}
-        onChangeText={setValue}
+        onChangeText={setValue ? setValue : onChangeText}
         secureTextEntry={secureTextEntry}
         keyboardType={keyboardType}
       ></TextInput>

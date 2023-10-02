@@ -1,27 +1,23 @@
-import { KeyboardAvoidingView, StyleSheet, View, Image } from "react-native";
-import React, { useState } from "react";
-import { FIREBASE_AUTH } from "../../FirebaseConfig";
-import { signInWithEmailAndPassword } from "firebase/auth";
-
+import { KeyboardAvoidingView, StyleSheet, View, Image, Alert } from "react-native";
+import { useState } from "react";
 import Logo from "../../assets/img/logoK.png";
 import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
 
+
+import { loginUser } from "../services/authService";
+
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  //const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
-    signInWithEmailAndPassword(FIREBASE_AUTH, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        //console.log("usuario logueado", user.email);
-      })
-      .catch((error) => {
-        console.error("Usuario o contraseña incorrectos");
-      });
-  };
+  const handleLogin = async () => {
+    const success = await loginUser(email, password);
+    if (success)
+      console.log('Usuario logueado correctamente')
+    else
+      Alert.alert('Error', 'Usuario o contraseña incorrectos')
+  }
 
   return (
     <KeyboardAvoidingView style={styles.container}>

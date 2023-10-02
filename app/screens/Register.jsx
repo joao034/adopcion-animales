@@ -10,6 +10,8 @@ import {
   import { addDoc, collection} from "firebase/firestore"; 
   import CustomButton from "../components/CustomButton";
 
+  import { registerUser } from "../services/authService";
+
   
   const Register = (  ) => {
   
@@ -19,43 +21,29 @@ import {
     const [cedula, setCedula] = useState('')
     const [password, setPassword] = useState('')
     const [perfil, setPerfil] = useState('')
-  
-    const usersCollection = collection(FIREBASE_DB, "users");
 
-    //getUsers
-    const getUsers = async () => {
-      const data = await getDocs(usersCollection)
+    const handleSignUp = async () => {
+      const success = await registerUser( nombres, apellidos, email, password , cedula )
+      try{
+        if( success )
+          console.log('Usuario registrado correctamente')
+      }catch( error ){
+        console.error("error ->", error);
+      }
     }
 
-
-    const handleSignUp = () => {
-      createUserWithEmailAndPassword(FIREBASE_AUTH, email, password)
-        .then((userCredential) => {
-          // Signed in
-          const user = userCredential.user;
-          addNewUser();
-          console.log(user.id);
-        })
-        .catch((error) => {
-          console.log('error=>', error);
-        });
-    };
-    
-  
+  //add a new document to users collection
     const addNewUser = async () => {
-      //agregar un nuevo documento a la coleccion
-      const user = {
-        nombres: nombres,
-        apellidos: apellidos,
-        email: email,
-        cedula: cedula,
-        password: password,
+      await addDoc(collection(FIREBASE_DB, "users"), {
+        id: FIREBASE_AUTH.currentUser.uid,
+        nombres,
+        apellidos,
+        email,
+        cedula,
         perfil: 'cliente'
-      };
-      await addDoc(collection(FIREBASE_DB, "users"), {user});
+      });
       
     };
-
   
     return (
       <KeyboardAvoidingView>
@@ -64,6 +52,7 @@ import {
             value={nombres}
             setValue={setNombres}
             placeholder="Nombres"
+            required
           ></CustomInput>
         <CustomInput
             value={apellidos}

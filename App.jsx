@@ -1,53 +1,64 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-
+import { onAuthStateChanged } from "firebase/auth";
+import { FIREBASE_AUTH } from "./FirebaseConfig";
 import Login from "./app/screens/Login";
 import Register from "./app/screens/Register";
-import ListaMascotas from "./app/screens/ListaMascotas";
-import { onAuthStateChanged } from "firebase/auth";
-import { FIREBASE_AUTH } from "./FirebaseConfig"
-
+import { TabsCliente, TabsAdmin } from "./app/navigation/Tabs";
+import { getUserData } from "./app/services/authService"
 
 const Stack = createNativeStackNavigator();
-const InsideStack = createNativeStackNavigator();
 
-// Renderiza una pila de navegación interna cuando el usuario tenga una sesion activa
-function InsideLayout() {
-  return (
-    <InsideStack.Navigator>
-      <InsideStack.Screen name="ListaMascotas" component={ListaMascotas} />
-    </InsideStack.Navigator>
-  );
-}
-
-export default function App() {
-
-  const [user, setUser] = useState(null);
+export default function App( ) {
+  const [authUser, setAuthUser] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    onAuthStateChanged(FIREBASE_AUTH, (user) => {
+    const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, async (user) => {
       if (user) {
-        setUser(user);
+        try {
+          setIsLoggedIn(true);
+          const userData = await getUserData(user.uid);
+          setAuthUser(userData || null); // Utiliza null en lugar de undefined
+        } catch (error) {
+          console.error("Error al obtener datos del usuario:", error);
+          setAuthUser(null);
+        }
       } else {
-        setUser(null);
+        setAuthUser(null);
+        setIsLoggedIn(false);
       }
     });
+
+    return () => unsubscribe();
   }, []);
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        { user ? <Stack.Screen name="Inside" component={InsideLayout} options={{ headerShown: false }} /> :  
-        <><Stack.Screen
+      {isLoggedIn && authUser ? (
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Tabs"
+            initialParams={{ authUser: authUser, setIsLoggedIn: setIsLoggedIn, setAuthUser: setAuthUser }}
+            component={authUser.perfil == "admin" ? TabsAdmin : TabsCliente}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
+      ) : (
+        <Stack.Navigator initialRouteName="Login">
+          <Stack.Screen
             name="Login"
             component={Login}
-            options={{ headerShown: false }} /><Stack.Screen
-              name="Register"
-              component={Register}
-              options={{ title: "Registro de Usuarios" }} /></>
-      }
-      </Stack.Navigator>
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Register"
+            component={Register}
+            options={{ title: "Registro de Usuarios" }}
+          />
+        </Stack.Navigator>
+      )}
     </NavigationContainer>
   );
 }
