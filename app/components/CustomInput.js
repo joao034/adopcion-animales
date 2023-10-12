@@ -1,15 +1,49 @@
-import { View, TextInput, StyleSheet } from "react-native";
+import { View, TextInput, StyleSheet, Text } from "react-native";
+import COLORS from "../consts/colors";
+import { useState } from "react";
 
-const CustomInput = ( { placeholder, value, setValue, onChangeText, secureTextEntry, keyboardType="text"}) => {
+const CustomInput = ({
+  placeholder,
+  value,
+  setValue,
+  onChangeText,
+  secureTextEntry,
+  keyboardType = "text",
+  error,
+  onFocus = () => {},
+}) => {
+  const [isFocused, setIsFocused] = useState(false);
+
   return (
-    <View style={styles.container}>
-      <TextInput
-        placeholder={placeholder}
-        value={value}
-        onChangeText={setValue ? setValue : onChangeText}
-        secureTextEntry={secureTextEntry}
-        keyboardType={keyboardType}
-      ></TextInput>
+    <View>
+      <View
+        style={[
+          styles.container,
+          {
+            borderColor: error
+              ? COLORS.red
+              : isFocused
+              ? COLORS.primary
+              : COLORS.gray,
+          },
+        ]}
+      >
+        <TextInput
+          placeholder={placeholder}
+          value={value}
+          onChangeText={setValue ? setValue : onChangeText}
+          secureTextEntry={secureTextEntry}
+          onFocus={() => {
+            onFocus();
+            setIsFocused(true);
+          }}
+          onBlur={() => setIsFocused(false)}
+          keyboardType={keyboardType}
+        ></TextInput>
+      </View>
+      {error && (
+        <Text style={{ color: COLORS.red, marginTop: 5 }}>{error}</Text>
+      )}
     </View>
   );
 };
@@ -18,7 +52,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
     width: "100%",
-    borderColor: "#e8e8e8",
     borderWidth: 1,
     borderRadius: 5,
     padding: 10,

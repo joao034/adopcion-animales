@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, StyleSheet, View, Image, Alert } from "react-native";
+import { KeyboardAvoidingView, StyleSheet, View, Image, Alert, Keyboard} from "react-native";
 import { useState } from "react";
 import Logo from "../../assets/img/logoK.png";
 import CustomInput from "../components/CustomInput";
@@ -10,6 +10,28 @@ import { loginUser } from "../services/authService";
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({});
+
+  const validate = () => {
+    Keyboard.dismiss();
+    let isValid = true
+    if ( !email ){
+      handleError('email', 'Ingrese el correo electrónico')
+      isValid = false
+    }
+    if ( !password ){
+      handleError('password', 'Ingrese la contraseña')
+      isValid = false
+    }
+
+    if ( isValid ){
+      handleLogin()
+    }
+  }
+
+  const handleError = ( input, error) => {
+    setErrors(prevState => ({...prevState, [input]: error}));
+  };
 
   const handleLogin = async () => {
     const success = await loginUser(email, password);
@@ -29,16 +51,20 @@ const Login = ({ navigation }) => {
           value={email}
           setValue={setEmail}
           placeholder="Correo electrónico"
+          onFocus={() => handleError('email', '')}
+          error={errors.email}
         ></CustomInput>
         <CustomInput
           value={password}
           setValue={setPassword}
           placeholder="Contraseña"
           secureTextEntry
+          onFocus={() => handleError('password', '')}
+          error={errors.password}
         ></CustomInput>
       </View>
       <View style={styles.buttonContainer}>
-        <CustomButton onPress={handleLogin} title={"Login"}></CustomButton>
+        <CustomButton onPress={validate} title={"Login"}></CustomButton>
         <CustomButton
           onPress={() => navigation.navigate("Register")}
           title={"Registrarse"}
@@ -67,7 +93,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: "60%",
-    marginTop: 20,
+    marginTop: 10,
   },
   logo: {
     width: 400,

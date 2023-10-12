@@ -1,25 +1,40 @@
-import { View, Text, Button } from 'react-native'
-import { FIREBASE_AUTH } from '../../FirebaseConfig'
-import { getUserData } from '../services/authService'
-import { useState, useEffect } from 'react'
+import { View, Text, Button, StyleSheet, TouchableOpacity } from "react-native";
+import { FIREBASE_AUTH } from "../../FirebaseConfig";
+import { getUserData } from "../services/authService";
+import { useState, useEffect, useLayoutEffect } from "react";
 
-const Profile = ( { route } ) => {
+const Profile = ({ route, ...props }) => {
+  //Datos recibidos desde el componente padre
+  const { authUser, setAuthUser, setIsLoggedIn } = route.params;
 
-  const { authUser, setAuthUser, setIsLoggedIn } = route.params
-  
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState(null);
 
-  useEffect( async () => {
-    try{
-      const user = await getUserData( FIREBASE_AUTH.currentUser.uid )
-      if(user)
-        setUser(user)
-    }catch(error){
-      console.error("error ->", error)
+  useLayoutEffect(() => {
+    props.navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => FIREBASE_AUTH.signOut()}
+        >
+          <Text style={styles.text_button}>Cerrar sesión</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, []);
+
+  /* useEffect(() => {
+    try {
+      const getUser = async () => {
+        const user = await getUserData(FIREBASE_AUTH.currentUser.uid);
+        user ? setUser(user) : setUser(null);
+      };
+      getUser();
+    } catch (error) {
+      console.error("error ->", error);
     }
-  }, [])  
+  }, []); */
 
-  const handleSignOut = async () => {
+  /* const handleSignOut = async () => {
     try {
       await FIREBASE_AUTH.signOut();
       setAuthUser(null);
@@ -27,17 +42,26 @@ const Profile = ( { route } ) => {
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
     }
-  };
+  }; */
 
   return (
     <View>
-      { user ? <Text>Bienvenido {user.nombres}</Text> : <Text>Cargando...</Text>  }
-      <Button
-        onPress={handleSignOut}
-        title="Salir"
-      ></Button>
+      {authUser ? (
+        <Text>Bienvenido {authUser.nombres}</Text>
+      ) : (
+        <Text>Cargando...</Text>
+      )}
     </View>
-  )
-}
+  );
+};
 
-export default Profile
+const styles = StyleSheet.create({
+  button: {
+    marginRight: 10,
+  },
+  text_button: {
+    color: "#c32c8b",
+  },
+});
+
+export default Profile;

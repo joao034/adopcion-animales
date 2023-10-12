@@ -1,140 +1,143 @@
-import {
-    KeyboardAvoidingView,
-    StyleSheet,
-    View,
-  } from "react-native";
-  import CustomInput from "../components/CustomInput";
-  import {useState} from "react";
-  import { createUserWithEmailAndPassword } from "firebase/auth";
-  import { FIREBASE_AUTH, FIREBASE_DB } from "../../FirebaseConfig";
-  import { addDoc, collection} from "firebase/firestore"; 
-  import CustomButton from "../components/CustomButton";
+import { KeyboardAvoidingView, StyleSheet, View, Text, Alert} from "react-native";
+import CustomInput from "../components/CustomInput";
+import { useState } from "react";
+import CustomButton from "../components/CustomButton";
+import { registerUser } from "../services/authService";
+import COLORS from "../consts/colors";
 
-  import { registerUser } from "../services/authService";
+const Register = () => {
+  const [nombres, setNombres] = useState("");
+  const [apellidos, setApellidos] = useState("");
+  const [email, setEmail] = useState("");
+  const [cedula, setCedula] = useState("");
+  const [password, setPassword] = useState("");
+  const [perfil, setPerfil] = useState("");
 
-  
-  const Register = (  ) => {
-  
-    const [nombres, setNombres] = useState('')
-    const [apellidos, setApellidos] = useState('')
-    const [email, setEmail] = useState('')
-    const [cedula, setCedula] = useState('')
-    const [password, setPassword] = useState('')
-    const [perfil, setPerfil] = useState('')
+  const [errors, setErrors] = useState({});
 
-    const handleSignUp = async () => {
-      const success = await registerUser( nombres, apellidos, email, password , cedula )
-      try{
-        if( success )
-          console.log('Usuario registrado correctamente')
-      }catch( error ){
-        console.error("error ->", error);
-      }
+  const validate = () => {
+    let isValid = true;
+    if (!nombres) {
+      handleError("nombres", "Ingrese el nombre");
+      isValid = false;
+    }
+    if (!apellidos) {
+      handleError("apellidos", "Ingrese el apellido");
+      isValid = false;
+    }
+    if (!cedula) {
+      handleError("cedula", "Ingrese la cédula");
+      isValid = false;
+    }else if ( cedula.length < 10 ) {
+      handleError("cedula", "La cédula debe tener 10 dígitos");
+      isValid = false;
+    }
+    if (!email) {
+      handleError("email", "Ingrese el correo electrónico");
+      isValid = false;
+    } else if (!email.match(/\S+@\S+\.\S+/)) {
+      handleError("email", "Ingrese un correo electrónico válido");
+      isValid = false;
+    }
+    if (!password) {
+      handleError("password", "Ingrese la contraseña");
+      isValid = false;
+    }else if (password.length < 6) {
+      handleError("password", "La contraseña debe tener al menos 6 caracteres");
+      isValid = false;
     }
 
-  //add a new document to users collection
-    const addNewUser = async () => {
-      await addDoc(collection(FIREBASE_DB, "users"), {
-        id: FIREBASE_AUTH.currentUser.uid,
+    if (isValid) {
+      handleSignUp();
+    }
+  };
+
+  handleError = (input, error) => {
+    setErrors((prevState) => ({ ...prevState, [input]: error }));
+  };
+
+  const handleSignUp = async () => {
+    try {
+      const success = await registerUser(
         nombres,
         apellidos,
         email,
-        cedula,
-        perfil: 'cliente'
-      });
-      
-    };
-  
-    return (
-      <KeyboardAvoidingView>
-        <View style={styles.container}>  
+        password,
+        cedula
+      );
+      if (success) 
+        Alert.alert("Usuario registrado correctamente");
+    } catch (error) {
+      console.error("error ->", error);
+      Alert.alert("No se pudo registrar el usuario");
+    }
+  };
+
+  return (
+    <KeyboardAvoidingView style={styles.container}>
+      <Text style={styles.title}>Nuevo Usuario</Text>
+      <View style={styles.inputContainer}>
         <CustomInput
-            value={nombres}
-            setValue={setNombres}
-            placeholder="Nombres"
-            required
-          ></CustomInput>
+          value={nombres}
+          setValue={setNombres}
+          placeholder="Nombres"
+          error={errors.nombres}
+          onFocus={() => handleError('nombres', '')}
+        ></CustomInput>
         <CustomInput
-            value={apellidos}
-            setValue={setApellidos}
-            placeholder="Apellidos"
-          ></CustomInput>
+          value={apellidos}
+          setValue={setApellidos}
+          placeholder="Apellidos"
+          error={errors.apellidos}
+          onFocus={() => handleError('apellidos', '')}
+        ></CustomInput>
         <CustomInput
-            value={cedula}
-            setValue={setCedula}
-            placeholder="Cédula"
-            keyboardType="numeric"
-          ></CustomInput>
+          value={cedula}
+          setValue={setCedula}
+          placeholder="Cédula"
+          keyboardType="numeric"
+          error={errors.cedula}
+          onFocus={() => handleError('cedula', '')}
+        ></CustomInput>
         <CustomInput
-            value={email}
-            setValue={setEmail}
-            placeholder="Correo electrónico"
-            keyboardType="email-address"
-          ></CustomInput>
+          value={email}
+          setValue={setEmail}
+          placeholder="Correo electrónico"
+          keyboardType="email-address"
+          error={errors.email}
+          onFocus={() => handleError('email', '')}
+        ></CustomInput>
         <CustomInput
-            value={password}
-            setValue={setPassword}
-            placeholder="Contraseña"
-            secureTextEntry
-          ></CustomInput>
-        <CustomButton onPress={handleSignUp} title={"Registrar"}></CustomButton>
-        </View>
-      </KeyboardAvoidingView>
-    )
-  }
-  
-  export default Register
-  
-  const styles = StyleSheet.create({
-    container: {
-      alignItems: "center",
-      padding : 20,
-    },
-    title:{
-      fontSize: 30,
-      fontWeight: "bold",
-      color: "#f9a59a",
-      margin: 10
-    },
-    inputContainer: {
-      width: "80%",
-    },
-    buttonContainer: {
-      width: "60%",
-      marginTop: 20,
-    },
-    button: {
-      backgroundColor: "#f9a59a",
-      width: "100%",
-      borderRadius: 10,
-      padding: 15,
-      alignItems: "center",
-    },
-    buttonOutline: {
-      backgroundColor: "#fff",
-      color: "#000",
-      marginTop: 5,
-      borderColor: "#f9a59a",
-      borderWidth: 2,
-    },
-    buttonText: {
-      color: "#fff",
-      fontWeight: "700",
-      fontSize: 16,
-    },
-    buttonOutlineText: {
-      color: "#f9a59a",
-      fontWeight: "700",
-      fontSize: 16,
-    },
-    input: {
-      backgroundColor: "#fff",
-      marginVertical: 4,
-      height: 50,
-      padding: 10,
-      borderRadius: 5,
-      borderWidth: 1,
-      borderColor: "#000",
-    },
-  });
-  
+          value={password}
+          setValue={setPassword}
+          placeholder="Contraseña"
+          secureTextEntry
+          error={errors.password}
+          onFocus={() => handleError('password', '')}
+        ></CustomInput>
+        <CustomButton onPress={validate} title={"Registrar"}></CustomButton>
+      </View>
+    </KeyboardAvoidingView>
+  );
+};
+
+export default Register;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    paddingTop: 20,
+    backgroundColor: COLORS.white
+  },
+
+  title: {
+    fontSize: 26,
+    fontWeight: "bold",
+    color: COLORS.black,
+    margin: 10,
+  },
+  inputContainer: {
+    width: "80%",
+  },
+});

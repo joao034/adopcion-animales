@@ -1,58 +1,87 @@
 import {
-  Image,
+  Button,
   View,
   Text,
   ScrollView,
+  Image,
   StyleSheet,
   FlatList,
   TouchableOpacity,
 } from "react-native";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useLayoutEffect } from "react";
 import Perro from "../../assets/img/perro.png";
 
 import { getAnimales } from "../services/animalesService";
 
 import CustomCard from "../components/CustomCard";
 import CustomButton from "../components/CustomButton";
+import { FIREBASE_DB } from "../../FirebaseConfig";
+import { collection, onSnapshot } from "firebase/firestore";
 
-const ListaMascotas = ( props ) => {
-
+const ListaMascotas = ( { route, ...props} ) => {
   const [animales, setAnimales] = useState([]);
 
-  useEffect( async () => {
-    const dataAnimales = await getAnimales();
-    setAnimales(dataAnimales);
+  useLayoutEffect(() => {
+    props.navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={() => props.navigation.navigate("Create")}>
+          <Text style={styles.text_button}>+ Agregar</Text>
+        </TouchableOpacity>
+      ),
+    });
   }, []);
 
   useEffect(() => {
-    console.log("Animales:", animales);
-  }, [animales]);
+    const getData = async () => {
+      const dataAnimales = await getAnimales();
+      dataAnimales ? setAnimales(dataAnimales) : setAnimales([]);
+    };
+    getData();
+  }, [ route.params ]);
+
+  /* useEffect(() => {
+    const unsubscribe = onSnapshot(collection(FIREBASE_DB, "animales"), (snapshot) => {
+      // listen to changes in the collection in firestore
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "added") {
+          // if a new file is added, add it to the state
+          console.log("New file", change.doc.data());
+          setAnimales((prevFiles) => [...prevFiles, change.doc.data()]);
+        }
+      });
+    });
+   
+    return () => unsubscribe();
+    // It is a good practice to unsubscribe to the listener when unmounting.
+    // Because if you don't, you will have a memory leak.
+  }, []); */
+
 
   return (
-    <ScrollView>
-      <CustomButton
-        title={"Agregar Animal"}
-        type={"SECONDARY"}
-        onPress={() => props.navigation.navigate("Create")}
-      >
-      </CustomButton>
-
-      <View>
-        <FlatList
-          data={animales}
-          renderItem={({ item }) => (
-            <TouchableOpacity key={ item.id }
-              onPress={() => props.navigation.navigate("Show", { animalId: item.id } )}
-            >
-              <CustomCard>
-                <Text>{item.nombre}</Text>
-              </CustomCard>
-            </TouchableOpacity>
-          )}
-        />
-      </View>
-    </ScrollView>
+    <View style={styles.container}>
+      <FlatList
+      data={animales}
+      keyExtractor={(item) => item.id}
+      renderItem={({ item }) => (
+        <TouchableOpacity
+          onPress={() =>
+            props.navigation.navigate("Show", { animalId: item.id })
+          }
+        >
+          <CustomCard>
+            <Image style={styles.image} source={{ uri: item.imagenUrl }} />
+            <Text style={styles.text}>{item.nombre}</Text>
+            <Text style={ { textAlign: "center" }}> {item.tamanio} - {item.sexo}</Text>
+          </CustomCard>
+        </TouchableOpacity>
+      )}
+      numColumns={2}
+      contentContainerStyle={{ gap: 2, flexGrow:1}}
+      columnWrapperStyle={{ gap: 2, justifyContent: "center"}}
+    />
+    </View>
+    
   );
 };
 
@@ -60,6 +89,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+    alignContent: "center",
+  },
+  text: {
+    color: "#4d4d4d",
+    fontSize: 18,
+    textAlign: "center",
+  },
+  text_button: {
+    color: "#c32c8b",
+  },
+  image: {
+    width: 140,
+    height: 130,
+    borderRadius: 5,
   },
 });
 

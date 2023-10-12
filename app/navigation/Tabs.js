@@ -1,5 +1,3 @@
-
-
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import ListaMascotas from "../screens/ListaMascotas";
 import Foro from "../screens/Foro";
@@ -12,24 +10,26 @@ import ShowAnimal from "../screens/ShowAnimal";
 import Info from "../screens/Info";
 import CreateAnimal from "../screens/CreateAnimal";
 
-
 const Tab = createBottomTabNavigator();
 
 //stack del modulo de mascotas
 const StackMascotas = createNativeStackNavigator();
 
 function StackMascotasScreen() {
-    return (
-        <StackMascotas.Navigator>
-            <StackMascotas.Screen name="List" component={ListaMascotas} />
-            <StackMascotas.Screen name="Show" component={ShowAnimal} />
-            <StackMascotas.Screen name="Create" component={CreateAnimal} />
-        </StackMascotas.Navigator>
-    );
+  return (
+    <StackMascotas.Navigator>
+      <StackMascotas.Screen name="List" component={ListaMascotas} />
+      <StackMascotas.Screen name="Show" component={ShowAnimal} />
+      <StackMascotas.Screen
+        name="Create"
+        component={CreateAnimal}
+        options={{ presentation: "modal" }}
+      />
+    </StackMascotas.Navigator>
+  );
 }
 
-function TabsAdmin( {route} ){
- 
+function TabsAdmin({ route }) {
   return (
     <Tab.Navigator
       initialRouteName="List"
@@ -75,7 +75,7 @@ function TabsAdmin( {route} ){
       <Tab.Screen
         name="Profile"
         component={Profile}
-        initialParams={ route.params }
+        initialParams={route.params}
         options={{
           tabBarLabel: "Perfil",
           tabBarIcon: ({ color, size }) => (
@@ -101,11 +101,7 @@ function TabsCliente() {
         options={{
           tabBarLabel: "Información",
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons
-              name="info"
-              color={color}
-              size={size}
-            />
+            <MaterialCommunityIcons name="info" color={color} size={size} />
           ),
         }}
       />
