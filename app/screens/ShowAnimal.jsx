@@ -20,13 +20,6 @@ const ShowAnimal = ({ route, ...props }) => {
   const [animal, setAnimal] = useState({});
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const toggleModal = () => {
-    setIsModalVisible(!isModalVisible);
-  };
-
-  //contenido del modal
-  const modalContent = <Text> Deseas eliminar al siguiente animal?</Text>;
-
   useEffect(() => {
     const getDataAnimal = async (animalId) => {
       const animalData = await getAnimal(animalId);
@@ -38,17 +31,7 @@ const ShowAnimal = ({ route, ...props }) => {
   useLayoutEffect(() => {
     props.navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity
-          onPress={() => {
-            toggleModal;
-          }}
-        >
-          <CustomModal
-            visible={isModalVisible}
-            onClose={toggleModal}
-            title="Título del Modal"
-            content={modalContent}
-          />
+        <TouchableOpacity onPress={() => setIsModalVisible(!isModalVisible)}>
           <Text style={styles.text_button}>Eliminar</Text>
         </TouchableOpacity>
       ),
@@ -58,19 +41,31 @@ const ShowAnimal = ({ route, ...props }) => {
   const eliminarAnimal = async () => {
     const success = await deleteAnimal(animalId);
     if (success) {
-      console.log("Eliminado");
-      Alert.alert("Éxito", "!Animal registrado correctamente!");
-      props.navigation.navigate("List");
+      Alert.alert("Éxito", "!Animal eliminado correctamente!");
+      props.navigation.navigate("List", { isReload: true });
     } else {
       Alert.alert("Alerta", "No se pudo eliminar el animal");
     }
   };
 
+  const modalContent = (
+    <View>
+      <Text>¿Deseas eliminar al siguiente animal?</Text>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
+      <CustomModal
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+        title="Eliminar animal"
+        content={modalContent}
+        functionOK={eliminarAnimal}
+      />
+
       <CustomCard>
         <View>
-     
           <Image style={styles.image} source={{ uri: animal.imagenUrl }} />
           <Text style={styles.info_text}>Nombre: {animal.nombre}</Text>
           <Text style={styles.info_text}>Raza: {animal.raza}</Text>

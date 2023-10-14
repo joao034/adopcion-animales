@@ -1,11 +1,4 @@
-import { View, Text } from "react-native";
-import { useState } from "react";
-import CustomDropdown from "../components/CustomDropdown";
-import { useEffect } from "react";
-
-
-const Chat = () => {
-  const dogBreeds = [
+const dogBreeds = [
     { "label": "No determinada", "value": "No determinada" },
     { "label": "Labrador Retriever", "value": "Labrador Retriever" },
     { "label": "Bulldog", "value": "Bulldog" },
@@ -58,41 +51,5 @@ const Chat = () => {
     { "label": "Galgo Afgano", "value": "Galgo Afgano" },
     { "label": "Leonberger", "value": "Leonberger" }
   ]
-  
-  const [value, setValue] = useState(null);
-  const [breeds, setBreeds] = useState([]);
 
-  useEffect(() => {
-    setBreeds(dogBreeds);
-  }, []);
-
-  /* async function getDogBreed() {
-    const response = await fetch(
-      "https://dog.ceo/api/breeds/list/all"
-    );
-    const data = await response.json();
-    const breeds = Object.keys(data.message);
-    setBreeds(breeds);
-  }
- */
-  onChange = (item) => {
-    setValue(item.value);
-    console.log(value);
-  };
-
-  return (
-    <View>
-      <CustomDropdown
-        data={breeds}
-        value={value}
-        onChange={onChange}
-        placeholder={"Selecciona la raza del animal"}
-        searchPlaceholder="Buscar la raza del animal"
-        labelField="label"
-        valueField="value"
-      />
-    </View>
-  );
-};
-
-export default Chat;
+  export default dogBreeds;

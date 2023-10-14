@@ -153,6 +153,7 @@ function TabsCliente() {
       <Tab.Screen
         name="Profile"
         component={Profile}
+        initialParams={route.params}
         options={{
           tabBarLabel: "Perfil",
           tabBarIcon: ({ color, size }) => (

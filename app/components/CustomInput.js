@@ -11,6 +11,8 @@ const CustomInput = ({
   keyboardType = "text",
   error,
   onFocus = () => {},
+  multiline,
+  numberOfLines 
 }) => {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -39,6 +41,8 @@ const CustomInput = ({
           }}
           onBlur={() => setIsFocused(false)}
           keyboardType={keyboardType}
+          multiline={multiline}
+          numberOfLines={numberOfLines}
         ></TextInput>
       </View>
       {error && (
