@@ -1,13 +1,12 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { useState } from "react";
-import UploadMediaFile from "../components/UploadMediaFile";
-import CustomModal from "../components/CustomModal";
+import  EditAnimal from "./EditAnimal"
 
 const Foro = () => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
+ 
   return (
     <View>
-      
+      <EditAnimal/>
     </View>
   );
 };

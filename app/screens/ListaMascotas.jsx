@@ -66,13 +66,14 @@ const ListaMascotas = ( { route, ...props} ) => {
       renderItem={({ item }) => (
         <TouchableOpacity
           onPress={() =>
-            props.navigation.navigate("Show", { animalId: item.id })
+            //props.navigation.navigate("Show", { animalId: item.id })
+            props.navigation.navigate("Edit", { animalId: item.id })
           }
         >
           <CustomCard>
             <Image style={styles.image} source={{ uri: item.imagenUrl }} />
             <Text style={styles.text}>{item.nombre}</Text>
-            <Text style={ { textAlign: "center" }}> {item.tamanio} - {item.sexo}</Text>
+            <Text style={ { textAlign: "center" }}>{item.sexo} - {item.tamanio}</Text>
           </CustomCard>
         </TouchableOpacity>
       )}

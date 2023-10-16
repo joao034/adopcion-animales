@@ -21,7 +21,7 @@ const ShowAnimal = ({ route, ...props }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
-    const getDataAnimal = async (animalId) => {
+    const getDataAnimal = async () => {
       const animalData = await getAnimal(animalId);
       animalData ? setAnimal(animalData) : setAnimal({});
     };

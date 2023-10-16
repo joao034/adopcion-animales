@@ -6,6 +6,7 @@ import {
   getDocs,
   getDoc,
   deleteDoc,
+  setDoc
 } from "firebase/firestore";
 import * as FileSystem from "expo-file-system";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
