@@ -11,17 +11,26 @@ import {
 import { useEffect, useState } from "react";
 import CustomInput from "../CustomInput";
 import CustomButton from "../CustomButton";
+import CustomDropdown from "../CustomDropdown";
+import BreedDropdown from "../BreedDropdown";
 import COLORS from "../../consts/colors";
 import Icono from "../../../assets/img/noPhoto.png";
 
 const AnimalForm = ({ title, initialData, pickImage, onUpdate }) => {
+
   const [animal, setAnimal] = useState(initialData || {});
   const [errors, setErrors] = useState({});
   //const [image, setImage] = useState(null);
 
+  const tipoAnimal = ["Perro", "Gato"];
+
   useEffect(() => {
     setAnimal(initialData);
   }, [initialData]);
+
+  useEffect(() => {
+    console.log(animal);
+  }, [animal]);
 
   const validate = () => {
     let isValid = true;
@@ -74,9 +83,14 @@ const AnimalForm = ({ title, initialData, pickImage, onUpdate }) => {
     }
   };
 
-   //enviar datos actualizados del animal a la screen EditAnimal
+  //enviar datos actualizados del animal a la screen EditAnimal
   const handleSubmit = () => {
     onUpdate(animal);
+  };
+
+  // recibe el value seleccionado y setea el valor en el state animal
+  const onSelected = (value) => {
+    setAnimal((prevState) => ({ ...prevState, raza: value }));
   };
 
   const handleChangeText = (value, name) => {
@@ -96,12 +110,13 @@ const AnimalForm = ({ title, initialData, pickImage, onUpdate }) => {
           {animal.imagenUrl ? (
             <Image source={{ uri: animal.imagenUrl }} style={styles.image} />
           ) : (
-            <Image source={Icono} style={{ width: 170, height: 170 }} />
+            <>
+              <Image source={Icono} style={{ width: 170, height: 170 }} />
+              <Text style={{ textAlign: "center", color: COLORS.gray }}>
+                Seleccione una imagen
+              </Text>
+            </>
           )}
-          <Text style={{ textAlign: "center", color: COLORS.gray }}>
-            {" "}
-            Seleccione una imagen{" "}
-          </Text>
         </TouchableOpacity>
         <View style={styles.inputContainer}>
           <CustomInput
@@ -111,6 +126,9 @@ const AnimalForm = ({ title, initialData, pickImage, onUpdate }) => {
             onFocus={() => handleError("nombre", "")}
             error={errors.nombre}
           />
+
+          <BreedDropdown breedSelected={animal.raza} onSelected={onSelected}/>
+
           <CustomInput
             placeholder={"Tipo de animal"}
             onChangeText={(value) => handleChangeText(value, "especie")}
@@ -156,6 +174,7 @@ const AnimalForm = ({ title, initialData, pickImage, onUpdate }) => {
             value={animal.caracteristicas || ""}
             onFocus={() => handleError("caracteristicas", "")}
             error={errors.caracteristicas}
+            multiline={true}
           />
           <CustomButton title="Guardar" onPress={validate} />
         </View>

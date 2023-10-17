@@ -77,7 +77,6 @@ const Chat = () => {
  */
   onChange = (item) => {
     setValue(item.value);
-    console.log(value);
   };
 
   return (

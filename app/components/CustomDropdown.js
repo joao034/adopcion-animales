@@ -11,7 +11,7 @@ const CustomDropdown = ({
   searchPlaceholder,
   labelField,
   valueField,
-  icon = "down",
+  icon = "",
 }) => {
 
   return (
@@ -39,8 +39,8 @@ const CustomDropdown = ({
 
 const styles = StyleSheet.create({
   dropdown: {
-    margin: 16,
-    height: 50,
+    margin: 10,
+    height: 40,
     borderBottomColor: COLORS.primary,
     borderBottomWidth: 0.5,
   },

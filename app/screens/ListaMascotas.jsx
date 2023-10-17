@@ -10,14 +10,8 @@ import {
 } from "react-native";
 
 import { useEffect, useState, useLayoutEffect } from "react";
-import Perro from "../../assets/img/perro.png";
-
 import { getAnimales } from "../services/animalesService";
-
 import CustomCard from "../components/CustomCard";
-import CustomButton from "../components/CustomButton";
-import { FIREBASE_DB } from "../../FirebaseConfig";
-import { collection, onSnapshot } from "firebase/firestore";
 
 const ListaMascotas = ( { route, ...props} ) => {
   const [animales, setAnimales] = useState([]);

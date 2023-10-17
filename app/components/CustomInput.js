@@ -10,9 +10,9 @@ const CustomInput = ({
   secureTextEntry,
   keyboardType = "text",
   error,
+  multiline = false,
+  numberOfLines,
   onFocus = () => {},
-  multiline,
-  numberOfLines 
 }) => {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -27,6 +27,7 @@ const CustomInput = ({
               : isFocused
               ? COLORS.primary
               : COLORS.gray,
+            height: multiline ? '' : 40,
           },
         ]}
       >
@@ -60,7 +61,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginVertical: 5,
-    height: 40,
   },
 });
 
