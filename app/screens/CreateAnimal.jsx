@@ -32,7 +32,6 @@ const CreateAnimal = ({ ...props }) => {
     sexo: "",
     caracteristicas: "",
     estado: "",
-    color: "",
     peso: "",
     tamanio: "",
     esterilizado: "",

@@ -6,7 +6,7 @@ const Foro = () => {
  
   return (
     <View>
-      <EditAnimal/>
+      <Text>Foro</Text>
     </View>
   );
 };

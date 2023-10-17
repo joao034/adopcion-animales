@@ -1,8 +1,9 @@
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import CustomDropdown from "./CustomDropdown";
 import { useState, useEffect } from "react";
+import COLORS from "../consts/colors";
 
-const BreedDropdown = ({ breedSelected, onSelected }) => {
+const BreedDropdown = ({ breedSelected, onSelected, error}) => {
   const dogBreeds = [
     { label: "No determinada", value: "No determinada" },
     { label: "Labrador Retriever", value: "Labrador Retriever" },
@@ -93,6 +94,7 @@ const BreedDropdown = ({ breedSelected, onSelected }) => {
         labelField="label"
         valueField="value"
       />
+      {error && <Text style={{ color: COLORS.red, marginTop: 5 }}>{error}</Text>}
     </View>
   );
 };

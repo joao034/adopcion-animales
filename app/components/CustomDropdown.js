@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import { AntDesign } from "@expo/vector-icons";
 import COLORS from "../consts/colors";
@@ -8,32 +8,37 @@ const CustomDropdown = ({
   value,
   onChange,
   placeholder,
+  search = true,
   searchPlaceholder,
   labelField,
   valueField,
   icon = "",
+  error,
+  onFocus = () => {},
 }) => {
-
   return (
-    <Dropdown
-      style={styles.dropdown}
-      placeholderStyle={styles.placeholderStyle}
-      selectedTextStyle={styles.selectedTextStyle}
-      inputSearchStyle={styles.inputSearchStyle}
-      iconStyle={styles.iconStyle}
-      data={data}
-      search
-      maxHeight={300}
-      labelField={labelField}
-      valueField={valueField}
-      placeholder={placeholder}
-      searchPlaceholder={searchPlaceholder}
-      value={value}
-      onChange={ onChange }
-      renderLeftIcon={() => (
-        <AntDesign style={styles.icon} color="black" name={icon} size={20} />
-      )}
-    />
+    <View>
+      <Dropdown
+        style={styles.dropdown}
+        placeholderStyle={styles.placeholderStyle}
+        selectedTextStyle={styles.selectedTextStyle}
+        inputSearchStyle={styles.inputSearchStyle}
+        iconStyle={styles.iconStyle}
+        data={data}
+        search={search}
+        maxHeight={300}
+        labelField={labelField}
+        valueField={valueField}
+        placeholder={placeholder}
+        searchPlaceholder={searchPlaceholder}
+        value={value}
+        onChange={onChange}
+        renderLeftIcon={() => (
+          <AntDesign style={styles.icon} color="black" name={icon} size={20} />
+        )}
+      />
+      {error && <Text style={{ color: COLORS.red, marginTop: 5 }}>{error}</Text>}
+    </View>
   );
 };
 

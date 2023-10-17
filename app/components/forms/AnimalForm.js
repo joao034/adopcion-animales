@@ -8,6 +8,11 @@ import {
   Image,
 } from "react-native";
 
+import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { FIREBASE_STORAGE } from "../../../FirebaseConfig";
+
 import { useEffect, useState } from "react";
 import CustomInput from "../CustomInput";
 import CustomButton from "../CustomButton";
@@ -16,16 +21,59 @@ import BreedDropdown from "../BreedDropdown";
 import COLORS from "../../consts/colors";
 import Icono from "../../../assets/img/noPhoto.png";
 
-const AnimalForm = ({ title, initialData, pickImage, onUpdate }) => {
-
-  const [animal, setAnimal] = useState(initialData || {});
+const AnimalForm = ({ title, initialData, onSubmit }) => {
+  const [animal, setAnimal] = useState({});
   const [errors, setErrors] = useState({});
-  //const [image, setImage] = useState(null);
+  const [especie, setEspecie] = useState(""); //dropdown
+  const [sexo, setSexo] = useState(""); //dropdown
+  const [esterilizado, setEsterilizado] = useState(""); //dropdown
+  const [tamanio, setTamanio] = useState(""); //dropdown
+  const [edad, setEdad] = useState(""); //dropdown
+  const [estado, setEstado] = useState(""); //dropdown
+  const [image, setImage] = useState(null);
 
-  const tipoAnimal = ["Perro", "Gato"];
+  const tipoAnimal = [
+    { label: "Perro", value: "Perro" },
+    { label: "Gato", value: "Gato" },
+  ];
+
+  const dataSexo = [
+    { label: "Macho", value: "Macho" },
+    { label: "Hembra", value: "Hembra" },
+  ];
+
+  const dataEsterilizado = [
+    { label: "Sí", value: "Sí" },
+    { label: "No", value: "No" },
+  ];
+
+  const dataTamanio = [
+    { label: "Pequeño", value: "Pequeño" },
+    { label: "Mediano", value: "Mediano" },
+    { label: "Grande", value: "Grande" },
+  ];
+
+  const dataEdad = [
+    { label: "Cachorro", value: "Cachorro" },
+    { label: "Joven", value: "Joven" },
+    { label: "Adulto", value: "Adulto" },
+    { label: "Anciano", value: "Anciano" },
+  ];
+
+  const dataEstado = [
+    { label: "En adopción", value: "En adopción" },
+    { label: "En proceso", value: "En proceso" },
+    { label: "Adoptado", value: "Adoptado" },
+  ];
 
   useEffect(() => {
     setAnimal(initialData);
+    setEspecie(initialData.especie);
+    setSexo(initialData.sexo);
+    setEsterilizado(initialData.esterilizado);
+    setTamanio(initialData.tamanio);
+    setEdad(initialData.edad);
+    setEstado(initialData.estado);
   }, [initialData]);
 
   useEffect(() => {
@@ -64,6 +112,24 @@ const AnimalForm = ({ title, initialData, pickImage, onUpdate }) => {
       isValid = false;
     }
 
+    if (animal.esterilizado === "") {
+      handleError(
+        "esterilizado",
+        "Debe ingresar si el animal está esterilizado"
+      );
+      isValid = false;
+    }
+
+    if (animal.edad === "") {
+      handleError("edad", "Debe ingresar la etapa de vida del animal");
+      isValid = false;
+    }
+
+    if (animal.estado === "") {
+      handleError("estado", "Debe ingresar el estado del animal");
+      isValid = false;
+    }
+
     if (animal.caracteristicas === "") {
       handleError(
         "caracteristicas",
@@ -83,14 +149,68 @@ const AnimalForm = ({ title, initialData, pickImage, onUpdate }) => {
     }
   };
 
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images, // All, Images, Videos
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+      uploadImage(result.assets[0].uri);
+      //onImageChange(result.assets[0].uri);
+    }
+  };
+
+  const uploadImage = async (image) => {
+    try {
+      const { uri } = await FileSystem.getInfoAsync(image);
+      const blob = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+          resolve(xhr.response);
+        };
+        xhr.onerror = (e) => {
+          console.log(e);
+          reject(new TypeError("Error al subir la imagen"));
+        };
+        xhr.responseType = "blob";
+        xhr.open("GET", uri, true);
+        xhr.send(null);
+      });
+      const refer = ref(FIREBASE_STORAGE, "images/" + new Date().getTime());
+      // Sube la imagen a Firebase Storage
+      await uploadBytes(refer, blob);
+      console.log("Imagen subida correctamente");
+      // Obtiene la URL de la imagen
+      const url = await getDownloadURL(refer);
+      //setea la url de la imagen en el estado
+      setAnimal((prevAnimal) => ({ ...prevAnimal, imagenUrl: url }));
+
+      //setImage(null);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   //enviar datos actualizados del animal a la screen EditAnimal
   const handleSubmit = () => {
-    onUpdate(animal);
+    onSubmit(animal);
   };
 
   // recibe el value seleccionado y setea el valor en el state animal
   const onSelected = (value) => {
     setAnimal((prevState) => ({ ...prevState, raza: value }));
+  };
+
+  // recibe el value seleccionado del dropdown y setea el valor en el state animal
+  const handleDropdownChange = (value, name, setValue) => {
+    handleChangeText(value, name);
   };
 
   const handleChangeText = (value, name) => {
@@ -127,46 +247,108 @@ const AnimalForm = ({ title, initialData, pickImage, onUpdate }) => {
             error={errors.nombre}
           />
 
-          <BreedDropdown breedSelected={animal.raza} onSelected={onSelected}/>
-
-          <CustomInput
-            placeholder={"Tipo de animal"}
-            onChangeText={(value) => handleChangeText(value, "especie")}
-            value={animal.especie || ""}
-            onFocus={() => handleError("especie", "")}
+          <CustomDropdown
+            data={tipoAnimal}
+            value={especie || ""}
+            onChange={(item) =>
+              handleDropdownChange(
+                item.value,
+                "especie",
+                setEspecie(item.value)
+              )
+            }
+            labelField="label"
+            valueField="value"
+            placeholder={"Seleccione el tipo de animal"}
+            search={false}
             error={errors.especie}
           />
-          <CustomInput
-            placeholder={"Raza"}
-            onChangeText={(value) => handleChangeText(value, "raza")}
-            value={animal.raza || ""}
-            onFocus={() => handleError("raza", "")}
+          <BreedDropdown
+            breedSelected={animal.raza}
+            onSelected={onSelected}
             error={errors.raza}
           />
-          <CustomInput
-            placeholder={"Sexo"}
-            onChangeText={(value) => handleChangeText(value, "sexo")}
-            value={animal.sexo || ""}
-            onFocus={() => handleError("sexo", "")}
+
+          <CustomDropdown
+            data={dataSexo}
+            value={sexo || ""}
+            onChange={(item) =>
+              handleDropdownChange(item.value, "sexo", setSexo(item.value))
+            }
+            labelField="label"
+            valueField="value"
+            placeholder={"Seleccione el sexo del animal"}
+            search={false}
             error={errors.sexo}
           />
-          <View style={styles.rowContainer}>
-            <CustomInput
-              placeholder={"Peso"}
-              onChangeText={(value) => handleChangeText(value, "peso")}
-              value={animal.peso || ""}
-              keyboardType="numeric"
-              onFocus={() => handleError("peso", "")}
-              error={errors.peso}
-            />
-            <CustomInput
-              placeholder={"Tamaño"}
-              onChangeText={(value) => handleChangeText(value, "tamanio")}
-              value={animal.tamanio || ""}
-              onFocus={() => handleError("tamanio", "")}
-              error={errors.tamanio}
-            />
-          </View>
+          <CustomDropdown
+            data={dataEstado}
+            value={estado || ""}
+            onChange={(item) =>
+              handleDropdownChange(item.value, "estado", setEstado(item.value))
+            }
+            labelField="label"
+            valueField="value"
+            placeholder={"Seleccione el estado del animal"}
+            search={false}
+            error={errors.estado}
+          />
+
+          <CustomDropdown
+            data={dataEsterilizado}
+            value={esterilizado || ""}
+            onChange={(item) =>
+              handleDropdownChange(
+                item.value,
+                "esterilizado",
+                setEsterilizado(item.value)
+              )
+            }
+            labelField="label"
+            valueField="value"
+            placeholder={"¿Está esterilizado?"}
+            search={false}
+            error={errors.esterilizado}
+          />
+
+          <CustomDropdown
+            data={dataEdad}
+            value={edad || ""}
+            onChange={(item) =>
+              handleDropdownChange(item.value, "edad", setEdad(item.value))
+            }
+            labelField="label"
+            valueField="value"
+            placeholder={"Etapa de vida del animal"}
+            search={false}
+            error={errors.edad}
+          />
+
+          <CustomDropdown
+            data={dataTamanio}
+            value={tamanio || ""}
+            onChange={(item) =>
+              handleDropdownChange(
+                item.value,
+                "tamanio",
+                setTamanio(item.value)
+              )
+            }
+            labelField="label"
+            valueField="value"
+            placeholder={"Seleccione el tamaño del animal"}
+            search={false}
+            error={errors.tamanio}
+          />
+
+          <CustomInput
+            placeholder={"Peso"}
+            onChangeText={(value) => handleChangeText(value, "peso")}
+            value={animal.peso || ""}
+            keyboardType="numeric"
+            onFocus={() => handleError("peso", "")}
+            error={errors.peso}
+          />
 
           <CustomInput
             placeholder={"Características"}

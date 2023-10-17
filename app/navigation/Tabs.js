@@ -9,6 +9,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ShowAnimal from "../screens/ShowAnimal";
 import Info from "../screens/Info";
 import CreateAnimal from "../screens/CreateAnimal";
+import CreatePet from "../screens/CreatePet";
 import EditAnimal from "../screens/EditAnimal";
 
 const Tab = createBottomTabNavigator();
@@ -24,7 +25,7 @@ function StackMascotasScreen() {
       <StackMascotas.Screen name="Edit" component={EditAnimal} />
       <StackMascotas.Screen
         name="Create"
-        component={CreateAnimal}
+        component={CreatePet}
         options={{ presentation: "modal" }}
       />
     </StackMascotas.Navigator>

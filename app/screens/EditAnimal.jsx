@@ -16,7 +16,7 @@ export default function EditAnimal({ route, ...props }) {
   }, []);
 
   // recibe los nuevos datos del animal y actualiza el estado
-  const onUpdate = (updatedAnimal) => {
+  const onSubmit = (updatedAnimal) => {
     handleEdit(updatedAnimal);
   };
 
@@ -32,7 +32,7 @@ export default function EditAnimal({ route, ...props }) {
 
   return (
     <View>
-      <AnimalForm title={"Editar Animal"} initialData={animal} onUpdate={onUpdate} />
+      <AnimalForm title={"Editar Animal"} initialData={animal} onSubmit={onSubmit} />
     </View>
   );
 }
