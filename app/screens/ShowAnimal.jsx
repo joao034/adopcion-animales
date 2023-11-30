@@ -1,24 +1,13 @@
-import { useEffect, useState, useLayoutEffect } from "react";
-import {
-  View,
-  Text,
-  Alert,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-  Modal,
-  Touchable,
-} from "react-native";
-import { getAnimal, deleteAnimal } from "../services/animalesService";
+import { useEffect, useState } from "react";
+import { View, Text, StyleSheet, Image } from "react-native";
+import { getAnimal } from "../services/animalesService";
 import CustomCard from "../components/CustomCard";
 import CustomButton from "../components/CustomButton";
-import CustomModal from "../components/CustomModal";
 
 const ShowAnimal = ({ route, ...props }) => {
   const { animalId } = route.params;
 
   const [animal, setAnimal] = useState({});
-  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     const getDataAnimal = async () => {
@@ -28,42 +17,8 @@ const ShowAnimal = ({ route, ...props }) => {
     getDataAnimal(animalId);
   }, []);
 
-  useLayoutEffect(() => {
-    props.navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity onPress={() => setIsModalVisible(!isModalVisible)}>
-          <Text style={styles.text_button}>Eliminar</Text>
-        </TouchableOpacity>
-      ),
-    });
-  }, []);
-
-  const eliminarAnimal = async () => {
-    const success = await deleteAnimal(animalId);
-    if (success) {
-      Alert.alert("Éxito", "!Animal eliminado correctamente!");
-      props.navigation.navigate("List", { isReload: true });
-    } else {
-      Alert.alert("Alerta", "No se pudo eliminar el animal");
-    }
-  };
-
-  const modalContent = (
-    <View>
-      <Text>¿Deseas eliminar al siguiente animal?</Text>
-    </View>
-  );
-
   return (
     <View style={styles.container}>
-      <CustomModal
-        isModalVisible={isModalVisible}
-        setIsModalVisible={setIsModalVisible}
-        title="Eliminar animal"
-        content={modalContent}
-        functionOK={eliminarAnimal}
-      />
-
       <CustomCard>
         <View>
           <Image style={styles.image} source={{ uri: animal.imagenUrl }} />
@@ -81,7 +36,10 @@ const ShowAnimal = ({ route, ...props }) => {
           </Text>
         </View>
 
-        <CustomButton title={`Quiero adoptar a ${animal.nombre}`} />
+        <CustomButton
+          title={`Quiero adoptar a ${animal.nombre}`}
+          onPress={() => props.navigation.navigate("InfoSolicitudAdopcion")}
+        />
       </CustomCard>
     </View>
   );
@@ -91,9 +49,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-  },
-  text_button: {
-    color: "#c32c8b",
   },
   image: {
     width: 300,

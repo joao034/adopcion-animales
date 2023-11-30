@@ -7,13 +7,18 @@ const CustomButton = ({
   type = "PRIMARY",
   bgColor,
   textColor,
+  disabled=false
 }) => {
   return (
     <Pressable
       onPress={onPress}
+      disabled={disabled}
       style={[
         styles.container,
         styles[`container_${type}`],
+        //si esta desabilitado se cambia el color de fondo
+        disabled ? { backgroundColor: "#c4c4c4" } : {},
+        //si se envia otro color por props se cambia el color de fondo
         bgColor ? { backgroundColor: bgColor } : {},
       ]}
     >

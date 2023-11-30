@@ -19,7 +19,7 @@ import CustomButton from "../CustomButton";
 import CustomDropdown from "../CustomDropdown";
 import BreedDropdown from "../BreedDropdown";
 import COLORS from "../../consts/colors";
-import Icono from "../../../assets/img/noPhoto.png";
+import Icono from "../../../assets/img/noIcon.png";
 
 const AnimalForm = ({ title, initialData, onSubmit }) => {
   const [animal, setAnimal] = useState({});

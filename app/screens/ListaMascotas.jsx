@@ -1,8 +1,6 @@
 import {
-  Button,
   View,
   Text,
-  ScrollView,
   Image,
   StyleSheet,
   FlatList,
@@ -13,17 +11,22 @@ import { useEffect, useState, useLayoutEffect } from "react";
 import { getAnimales } from "../services/animalesService";
 import CustomCard from "../components/CustomCard";
 
-const ListaMascotas = ( { route, ...props} ) => {
+const ListaMascotas = ({ route, ...props }) => {
+  //Datos recibidos desde el componente padre
+  const { authUser, setAuthUser, setIsLoggedIn } = route.params;
+
   const [animales, setAnimales] = useState([]);
 
   useLayoutEffect(() => {
-    props.navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity onPress={() => props.navigation.navigate("Create")}>
-          <Text style={styles.text_button}>+ Agregar</Text>
-        </TouchableOpacity>
-      ),
-    });
+    if (authUser.perfil === "admin") {
+      props.navigation.setOptions({
+        headerRight: () => (
+          <TouchableOpacity onPress={() => props.navigation.navigate("Create")}>
+            <Text style={styles.text_button}>+ Agregar</Text>
+          </TouchableOpacity>
+        ),
+      });
+    }
   }, []);
 
   useEffect(() => {
@@ -32,7 +35,7 @@ const ListaMascotas = ( { route, ...props} ) => {
       dataAnimales ? setAnimales(dataAnimales) : setAnimales([]);
     };
     getData();
-  }, [ route.params ]);
+  }, [route.params]);
 
   /* useEffect(() => {
     const unsubscribe = onSnapshot(collection(FIREBASE_DB, "animales"), (snapshot) => {
@@ -51,32 +54,33 @@ const ListaMascotas = ( { route, ...props} ) => {
     // Because if you don't, you will have a memory leak.
   }, []); */
 
-
   return (
     <View style={styles.container}>
       <FlatList
-      data={animales}
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => (
-        <TouchableOpacity
-          onPress={() =>
-            //props.navigation.navigate("Show", { animalId: item.id })
-            props.navigation.navigate("Edit", { animalId: item.id })
-          }
-        >
-          <CustomCard>
-            <Image style={styles.image} source={{ uri: item.imagenUrl }} />
-            <Text style={styles.text}>{item.nombre}</Text>
-            <Text style={ { textAlign: "center" }}>{item.sexo} - {item.tamanio}</Text>
-          </CustomCard>
-        </TouchableOpacity>
-      )}
-      numColumns={2}
-      contentContainerStyle={{ gap: 2, flexGrow:1}}
-      columnWrapperStyle={{ gap: 2, justifyContent: "center"}}
-    />
+        data={animales}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            onPress={() => {
+              authUser.perfil === "admin"
+                ? props.navigation.navigate("Edit", { animalId: item.id })
+                : props.navigation.navigate("Show", { animalId: item.id });
+            }}
+          >
+            <CustomCard>
+              <Image style={styles.image} source={{ uri: item.imagenUrl }} />
+              <Text style={styles.text}>{item.nombre}</Text>
+              <Text style={{ textAlign: "center" }}>
+                {item.sexo} - {item.tamanio}
+              </Text>
+            </CustomCard>
+          </TouchableOpacity>
+        )}
+        numColumns={2}
+        contentContainerStyle={{ gap: 2, flexGrow: 1 }}
+        columnWrapperStyle={{ gap: 2, justifyContent: "center" }}
+      />
     </View>
-    
   );
 };
 

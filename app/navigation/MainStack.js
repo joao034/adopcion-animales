@@ -12,6 +12,7 @@ import Profile from "../screens/Profile";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
+//No funciona
 const TabStack = () => {
   return (
     <Tab.Navigator

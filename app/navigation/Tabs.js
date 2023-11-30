@@ -9,24 +9,58 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ShowAnimal from "../screens/ShowAnimal";
 import Info from "../screens/Info";
 import CreateAnimal from "../screens/CreateAnimal";
-import CreatePet from "../screens/CreatePet";
 import EditAnimal from "../screens/EditAnimal";
+import SolicitudAdopcion from "../screens/SolicitudAdopcion";
+import InfoSolicitudAdopcion from "../screens/InfoSolicitudAdopcion";
 
 const Tab = createBottomTabNavigator();
 
 //stack del modulo de mascotas
 const StackMascotas = createNativeStackNavigator();
 
-function StackMascotasScreen() {
+function StackMascotasScreen({ route }) {
   return (
     <StackMascotas.Navigator>
-      <StackMascotas.Screen name="List" component={ListaMascotas} />
-      <StackMascotas.Screen name="Show" component={ShowAnimal} />
-      <StackMascotas.Screen name="Edit" component={EditAnimal} />
+      <StackMascotas.Screen
+        name="List"
+        initialParams={route.params}
+        component={ListaMascotas}
+        options={{
+          title: "Lista de Mascotas",
+        }}
+      />
+      <StackMascotas.Screen
+        name="Show"
+        component={ShowAnimal}
+        options={{
+          title: "Mascota",
+        }}
+      />
+      <StackMascotas.Screen
+        name="InfoSolicitudAdopcion"
+        component={InfoSolicitudAdopcion}
+        options={{
+          title: "Información solicitud de adopción",
+        }}
+      />
+      <StackMascotas.Screen
+        name="SolicitudAdopcion"
+        component={SolicitudAdopcion}
+        options={{
+          title: "Solicitud de adopción",
+        }}
+      />
+      <StackMascotas.Screen
+        name="Edit"
+        component={EditAnimal}
+        options={{
+          title: "Editar Animal",
+        }}
+      />
       <StackMascotas.Screen
         name="Create"
-        component={CreatePet}
-        options={{ presentation: "modal" }}
+        component={CreateAnimal}
+        options={{ presentation: "modal", title: "Registrar Animal" }}
       />
     </StackMascotas.Navigator>
   );
@@ -42,6 +76,7 @@ function TabsAdmin({ route }) {
     >
       <Tab.Screen
         name="StackMascotas"
+        initialParams={route.params}
         component={StackMascotasScreen}
         options={{
           headerShown: false,
@@ -90,7 +125,7 @@ function TabsAdmin({ route }) {
   );
 }
 
-function TabsCliente() {
+function TabsCliente({ route }) {
   return (
     <Tab.Navigator
       initialRouteName="List"
@@ -111,6 +146,7 @@ function TabsCliente() {
       <Tab.Screen
         name="ListaMascotas"
         component={StackMascotasScreen}
+        initialParams={route.params}
         options={{
           headerShown: false,
           tabBarLabel: "Mascotas",
