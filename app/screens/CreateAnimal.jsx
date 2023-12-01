@@ -4,6 +4,7 @@ import AnimalForm from "../components/forms/AnimalForm";
 import { addAnimal } from "../services/animalesService";
 
 const CreatePet = ( { ...props } ) => {
+  //Quitar el initial state
   const initialState = {
     nombre: "",
     especie: "",

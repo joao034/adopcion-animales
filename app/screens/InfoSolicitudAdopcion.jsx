@@ -25,7 +25,7 @@ const InfoSolicitudAdopcion = ({ ...props }) => {
         asesores revisarán la solicitud y se comunicarán con usted para
         continuar con el proceso.
       </Text>
-      <Text style={styles.info_text}>Contenido:</Text>
+      <Text style={styles.info_text}>El formulario contiene 4 secciones:</Text>
       <Text style={styles.info_text}>*Sección 1: Datos personales</Text>
       <Text style={styles.info_text}>*Sección 2: Situación Familiar</Text>
       <Text style={styles.info_text}>*Sección 3: Domicilio</Text>
@@ -45,7 +45,6 @@ const InfoSolicitudAdopcion = ({ ...props }) => {
         size={25}
         fillColor={COLORS.primary}
         text="He leído y acepto los términos y condiciones de la solicitud de adopción"
-        textStyle={{ fontFamily: "JosefinSans-Regular" }}
         isChecked={isChecked}
         onPress={() => setIsButtonDisabled(!isButtonDisabled)}
       />

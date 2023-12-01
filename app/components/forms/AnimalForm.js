@@ -32,6 +32,20 @@ const AnimalForm = ({ title, initialData, onSubmit }) => {
   const [estado, setEstado] = useState(""); //dropdown
   const [image, setImage] = useState(null);
 
+  useEffect(() => {
+    setAnimal(initialData);
+    setEspecie(initialData.especie);
+    setSexo(initialData.sexo);
+    setEsterilizado(initialData.esterilizado);
+    setTamanio(initialData.tamanio);
+    setEdad(initialData.edad);
+    setEstado(initialData.estado);
+  }, [initialData]);
+
+  useEffect(() => {
+    console.log(animal);
+  }, [animal]);
+
   const tipoAnimal = [
     { label: "Perro", value: "Perro" },
     { label: "Gato", value: "Gato" },
@@ -65,20 +79,6 @@ const AnimalForm = ({ title, initialData, onSubmit }) => {
     { label: "En proceso", value: "En proceso" },
     { label: "Adoptado", value: "Adoptado" },
   ];
-
-  useEffect(() => {
-    setAnimal(initialData);
-    setEspecie(initialData.especie);
-    setSexo(initialData.sexo);
-    setEsterilizado(initialData.esterilizado);
-    setTamanio(initialData.tamanio);
-    setEdad(initialData.edad);
-    setEstado(initialData.estado);
-  }, [initialData]);
-
-  useEffect(() => {
-    console.log(animal);
-  }, [animal]);
 
   const validate = () => {
     let isValid = true;
@@ -203,7 +203,7 @@ const AnimalForm = ({ title, initialData, onSubmit }) => {
     onSubmit(animal);
   };
 
-  // recibe el value seleccionado y setea el valor en el state animal
+  // recibe el value seleccionado de la raza y setea el valor en el state animal
   const onSelected = (value) => {
     setAnimal((prevState) => ({ ...prevState, raza: value }));
   };
