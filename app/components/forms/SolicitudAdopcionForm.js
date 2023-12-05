@@ -7,23 +7,72 @@ import COLORS from "../../consts/colors";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 const formDatosPersonalesForm = ({ onSubmit }) => {
-  const [formDatosPersonales, setFormDatosPersonales] = useState({});
-  const [formSituacionFamiliar, setFormSituacionFamiliar] = useState({});
-  const [formDomicilio, setFormDomicilio] = useState({});
-  const [formRelacionAnimales, setFormRelacionAnimales] = useState({});
+  const initialStateFormDatosPersonales = {
+    nombreCompleto: "",
+    cedula: "",
+    correo: "",
+    direccion: "",
+    fechaNacimiento: "",
+    ocupacion: "",
+    instruccion: "",
+    celular: "",
+    telefonoCasa: "",
+    referenciaNombreCompleto: "",
+    referenciaCelular: "",
+    referenciaParentesco: "",
+  };
+
+  const initialStateFormSituacionFamiliar = {
+    nombreFamiliar: "",
+    parentescoFamiliar: "",
+    edadFamiliar: "",
+    esperaBebe: false,
+  };
+
+  const initialStateFormDomicilio = {
+    tipoInmueble: "",
+    areaInmueble: "",
+    tipoPropiedad: "",
+    nombreDuenio: "",
+    celularDuenio: "",
+    tieneCerramiento: false,
+    materialCerramiento: "",
+    areaCerramiento: "",
+  };
+
+  const initialStateFormRelacionAnimales = {
+    malaExperienciaAnimales: "",
+    tipoMascota: "",
+    otraMascota: "",
+    sexoUltimaMascota: "",
+    esterilizadoUltimaMascota: "",
+    situacionUltimaMascota: "",
+  };
+
+  const [formDatosPersonales, setFormDatosPersonales] = useState(
+    initialStateFormDatosPersonales
+  );
+  const [formSituacionFamiliar, setFormSituacionFamiliar] = useState(
+    initialStateFormSituacionFamiliar
+  );
+  const [formDomicilio, setFormDomicilio] = useState(initialStateFormDomicilio);
+  const [formRelacionAnimales, setFormRelacionAnimales] = useState(
+    initialStateFormRelacionAnimales
+  );
   const [errors, setErrors] = useState({});
   //estados dropdowns
-  const [instruccion, setInstruccion] = useState(""); //dropdown
-  const [tipoInmueble, setTipoInmueble] = useState(""); //dropdown
-  const [tipoPropiedad, setTipoPropiedad] = useState(""); //dropdown
-  const [malaExperienciaAnimales, setMalaExperienciaAnimales] = useState(""); //dropdown
-  const [ultimaMascota, setUltimaMascota] = useState(""); //dropdown
-  const [sexoUltimaMascota, setSexoUltimaMascota] = useState(""); //dropdown
-  const [esterilizadoUltimaMascota, setEsterilizadoUltimaMascota] = useState(""); //dropdown
+  const [instruccion, setInstruccion] = useState("");
+  const [tipoInmueble, setTipoInmueble] = useState("");
+  const [tipoPropiedad, setTipoPropiedad] = useState("");
+  const [malaExperienciaAnimales, setMalaExperienciaAnimales] = useState("");
+  const [ultimaMascota, setUltimaMascota] = useState("");
+  const [sexoUltimaMascota, setSexoUltimaMascota] = useState("");
+  const [esterilizadoUltimaMascota, setEsterilizadoUltimaMascota] =
+    useState("");
 
-  useEffect(() => {
-    console.log(formRelacionAnimales);
-  }, [formRelacionAnimales]);
+  /* useEffect(() => {
+    console.log(formDatosPersonales);
+  }, [formDatosPersonales]);  */
 
   //formDatosPersonales
   const dataInstruccion = [
@@ -52,24 +101,252 @@ const formDatosPersonalesForm = ({ onSubmit }) => {
     { label: "Mordedura", value: "Mordedura" },
     { label: "Ninguna", value: "Ninguna" },
     { label: "Otras", value: "Otras" },
-  ]
+  ];
 
   const dataTipoMascotas = [
     { label: "Canino", value: "Canino" },
     { label: "Felino", value: "Felino" },
     { label: "No he tenido", value: "No he tenido" },
     { label: "Otra", value: "Otra" },
-  ]
+  ];
 
   const dataSexoMascota = [
     { label: "Macho", value: "Macho" },
     { label: "Hembra", value: "Hembra" },
-  ]
+  ];
 
   const dataEsterilizado = [
     { label: "Si", value: "Si" },
     { label: "No", value: "No" },
-  ]
+  ];
+
+  const validateDatosPersonales = () => {
+    let isValid = true;
+    if (formDatosPersonales.nombreCompleto === "") {
+      handleError("nombreCompleto", "Debe ingresar su nombre completo");
+      console.log("error Form Datos Personales");
+      isValid = false;
+    }
+
+    if (formDatosPersonales.cedula === "") {
+      handleError("cedula", "Ingrese la cédula");
+      isValid = false;
+    } else if (
+      formDatosPersonales.cedula.length < 10 ||
+      formDatosPersonales.cedula.length > 10
+    ) {
+      handleError("cedula", "La cédula debe tener 10 dígitos");
+      isValid = false;
+    }
+    if (formDatosPersonales.correo === "") {
+      handleError("correo", "Ingrese el correo electrónico");
+      isValid = false;
+    } else if (!formDatosPersonales.correo.match(/\S+@\S+\.\S+/)) {
+      handleError("correo", "Ingrese un correo electrónico válido");
+      isValid = false;
+    }
+
+    if (formDatosPersonales.direccion === "") {
+      handleError("direccion", "Debe ingresar su dirección");
+      isValid = false;
+    }
+    if (formDatosPersonales.fechaNacimiento === "") {
+      handleError("fechaNacimiento", "Debe ingresar su fecha de nacimiento");
+      isValid = false;
+    }
+    if (formDatosPersonales.ocupacion === "") {
+      handleError("ocupacion", "Debe ingresar su ocupación");
+      isValid = false;
+    }
+    if (formDatosPersonales.instruccion === "") {
+      handleError("instruccion", "Debe ingresar su nivel de instrucción");
+      isValid = false;
+    }
+    if (formDatosPersonales.celular === "") {
+      handleError("celular", "Debe ingresar su número de celular");
+      isValid = false;
+    }
+    if (
+      formDatosPersonales.celular.length < 10 ||
+      formDatosPersonales.celular.length > 10
+    ) {
+      handleError("celular", "El número de celular debe tener 10 dígitos");
+      isValid = false;
+    }
+
+    if (formDatosPersonales.referenciaNombreCompleto === "") {
+      handleError(
+        "referenciaNombreCompleto",
+        "Debe ingresar el nombre de su referencia personal"
+      );
+      isValid = false;
+    }
+    if (formDatosPersonales.referenciaCelular === "") {
+      handleError(
+        "referenciaCelular",
+        "Debe ingresar el número de celular de su referencia personal"
+      );
+      isValid = false;
+    }
+    if (
+      formDatosPersonales.referenciaCelular.length < 10 ||
+      formDatosPersonales.referenciaCelular.length > 10
+    ) {
+      handleError(
+        "referenciaCelular",
+        "El número de celular de su referencia personal debe tener 10 dígitos"
+      );
+      isValid = false;
+    }
+    if (formDatosPersonales.referenciaParentesco === "") {
+      handleError(
+        "referenciaParentesco",
+        "Debe ingresar el parentesco de su referencia personal"
+      );
+      isValid = false;
+    }
+    return isValid;
+  };
+
+  const validateSituacionFamiliar = () => {
+    let isValid = true;
+    if (formSituacionFamiliar.nombreFamiliar === "") {
+      console.log("error Form Situacion familiar");
+      handleError(
+        "nombreFamiliar",
+        "Debe ingresar el nombre de la persona que vive con usted"
+      );
+      isValid = false;
+    }
+    if (formSituacionFamiliar.parentescoFamiliar === "") {
+      handleError(
+        "parentescoFamiliar",
+        "Debe ingresar el parentesco de la persona que vive con usted"
+      );
+      isValid = false;
+    }
+    if (formSituacionFamiliar.edadFamiliar === "") {
+      handleError(
+        "edadFamiliar",
+        "Debe ingresar la edad de la persona que vive con usted"
+      );
+      isValid = false;
+    }
+    return isValid;
+  };
+
+  const validateDomicilio = () => {
+    let isValid = true;
+    if (formDomicilio.tipoInmueble === "") {
+      handleError("tipoInmueble", "Debe ingresar el tipo de inmueble");
+      isValid = false;
+    }
+    if (formDomicilio.areaInmueble === "") {
+      handleError("areaInmueble", "Debe ingresar el área del inmueble");
+      isValid = false;
+    }
+    if (formDomicilio.tipoPropiedad === "") {
+      handleError("tipoPropiedad", "Debe ingresar el tipo de propiedad");
+      isValid = false;
+    }
+
+    if (formDomicilio.tipoPropiedad === "Arrendada") {
+      if (formDomicilio.nombreDuenio === "") {
+        handleError("nombreDuenio", "Debe ingresar el nombre del dueño");
+        isValid = false;
+      }
+      if (formDomicilio.celularDuenio === "") {
+        handleError("celularDuenio", "Debe ingresar el celular del dueño");
+        isValid = false;
+      }
+      if (
+        formDomicilio.celularDuenio.length < 10 ||
+        formDomicilio.celularDuenio.length > 10
+      ) {
+        handleError(
+          "celularDuenio",
+          "El celular del dueño debe tener 10 dígitos"
+        );
+        isValid = false;
+      }
+    }
+
+    if (formDomicilio.tieneCerramiento === "") {
+      handleError(
+        "tieneCerramiento",
+        "Debe ingresar si el lugar donde pasará el animal tiene cerramiento"
+      );
+      isValid = false;
+    }
+
+    if (formDomicilio.tieneCerramiento) {
+      if (formDomicilio.materialCerramiento === "") {
+        handleError(
+          "materialCerramiento",
+          "Debe ingresar el material del cerramiento"
+        );
+        isValid = false;
+      }
+      if (formDomicilio.areaCerramiento === "") {
+        handleError("areaCerramiento", "Debe ingresar el área del cerramiento");
+        isValid = false;
+      }
+    }
+
+    return isValid;
+  };
+
+  const validateRelacionAnimales = () => {
+    let isValid = true;
+    if (formRelacionAnimales.malaExperienciaAnimales === "") {
+      handleError(
+        "malaExperienciaAnimales",
+        "Debe ingresar si ha tenido alguna mala experiencia con los animales"
+      );
+      isValid = false;
+    }
+    if (formRelacionAnimales.tipoMascota === "") {
+      handleError(
+        "tipoMascota",
+        "Debe ingresar el tipo de mascota que tuvo"
+      );
+      isValid = false;
+    }
+    
+    if( formRelacionAnimales.tipoMascota != "No he tenido" && formRelacionAnimales.tipoMascota != "") {
+      if (formRelacionAnimales.sexoUltimaMascota === "") {
+        handleError("sexoUltimaMascota", "Debe ingresar el sexo de la mascota");
+        isValid = false;
+      }
+      if (formRelacionAnimales.esterilizadoUltimaMascota === "") {
+        handleError(
+          "esterilizadoUltimaMascota",
+          "Debe ingresar si la mascota estaba esterilizada"
+        );
+        isValid = false;
+      }
+      if (formRelacionAnimales.situacionUltimaMascota === "") {
+        handleError(
+          "situacionUltimaMascota",
+          "Debe ingresar la situación actual de la mascota"
+        );
+        isValid = false;
+      }
+    }
+    return isValid;
+  }
+
+
+  //valida los datos de cada formulario para enviarlos a la screen Solicitud de Adopcion
+  const validate = () => {
+    const validateDP = validateDatosPersonales();
+    const validateSF = validateSituacionFamiliar();
+    const validateDom = validateDomicilio();
+    const validateRA = validateRelacionAnimales();
+    if (validateDP && validateRA && validateSF && validateDom) {
+      handleSubmit();
+    }
+  };
 
   //enviar datos actualizados del formulario a la screen Solicitud de Adopcion
   const handleSubmit = () => {
@@ -82,8 +359,8 @@ const formDatosPersonalesForm = ({ onSubmit }) => {
   };
 
   // recibe el value seleccionado del dropdown y setea el valor en el state formDatosPersonales
-  const handleDropdownChange = (value, name) => {
-    handleChangeText(value, name);
+  const handleDropdownChangeDatosPersonales = (value, name) => {
+    setFormDatosPersonales({ ...formDatosPersonales, [name]: value });
   };
 
   // recibe el value seleccionado del dropdown y setea el valor en el state formDomicilio
@@ -163,7 +440,7 @@ const formDatosPersonalesForm = ({ onSubmit }) => {
               }
               value={formDatosPersonales.fechaNacimiento || ""}
               onFocus={() => handleError("fechaNacimiento", "")}
-              error={errors.fechaNaciemiento}
+              error={errors.fechaNacimiento}
             />
             <CustomInput
               placeholder={"Ocupación"}
@@ -177,7 +454,7 @@ const formDatosPersonalesForm = ({ onSubmit }) => {
               data={dataInstruccion}
               value={instruccion || ""}
               onChange={(item) =>
-                handleDropdownChange(
+                handleDropdownChangeDatosPersonales(
                   item.value,
                   "instruccion",
                   setInstruccion(item.value)
@@ -249,7 +526,7 @@ const formDatosPersonalesForm = ({ onSubmit }) => {
                 handleChangeTextSF(value, "nombreFamiliar")
               }
               value={formSituacionFamiliar.nombreFamiliar || ""}
-              onFocus={() => handleError("nombreCompleto", "")}
+              onFocus={() => handleError("nombreFamiliar", "")}
               error={errors.nombreFamiliar}
             />
             <CustomInput
@@ -360,6 +637,7 @@ const formDatosPersonalesForm = ({ onSubmit }) => {
                 handleChangeTextDomicilio(value, "tieneCerramiento")
               }
             />
+            <Text style={styles.subsubtitle}>En caso de tener cerramiento: </Text>
             <CustomInput
               placeholder={"Material del cerramiento"}
               onChangeText={(value) =>
@@ -401,7 +679,9 @@ const formDatosPersonalesForm = ({ onSubmit }) => {
               }
               labelField="label"
               valueField="value"
-              placeholder={"¿Ha tenido alguna mala experiencia con los animales?"}
+              placeholder={
+                "¿Ha tenido alguna mala experiencia con los animales?"
+              }
               search={false}
               error={errors.malaExperienciaAnimales}
             />
@@ -422,13 +702,11 @@ const formDatosPersonalesForm = ({ onSubmit }) => {
               valueField="value"
               placeholder={"Tipo de Mascota"}
               search={false}
-              error={errors.ultimaMascota}
+              error={errors.tipoMascota}
             />
             <CustomInput
               placeholder={"¿Otro, cuál?"}
-              onChangeText={(value) =>
-                handleChangeTextRA(value, "otraMascota")
-              }
+              onChangeText={(value) => handleChangeTextRA(value, "otraMascota")}
               value={formRelacionAnimales.otraMascota || ""}
               onFocus={() => handleError("otraMascota", "")}
               error={errors.otraMascota}
@@ -448,7 +726,7 @@ const formDatosPersonalesForm = ({ onSubmit }) => {
               valueField="value"
               placeholder={"Sexo de la mascota"}
               search={false}
-              error={errors.sexoUtlimaMascota}
+              error={errors.sexoUltimaMascota}
             />
             <CustomDropdown
               data={dataEsterilizado}
@@ -467,7 +745,9 @@ const formDatosPersonalesForm = ({ onSubmit }) => {
               error={errors.esterilizadoUltimaMascota}
             />
             <CustomInput
-              placeholder={"¿En dónde está ahora? Si falleció, lo perdió o está en otro lugar, indique la causa."}
+              placeholder={
+                "¿En dónde está ahora? Si falleció, lo perdió o está en otro lugar, indique la causa."
+              }
               onChangeText={(value) =>
                 handleChangeTextRA(value, "situacionUltimaMascota")
               }
@@ -478,7 +758,7 @@ const formDatosPersonalesForm = ({ onSubmit }) => {
             />
           </View>
         </View>
-        <CustomButton title="Guardar" onPress={handleSubmit} />
+        <CustomButton title="Guardar" onPress={validate} />
       </View>
     </ScrollView>
   );
