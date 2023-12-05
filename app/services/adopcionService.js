@@ -12,23 +12,6 @@ const addDocument = async (collectionName, document, mensaje) => {
   }
 };
 
-//get las solicitudes de adopcion en estado pendiente
-//aumentar un parametro estado y consultar por ese parametro
-/* 
-const getSolicitudesAdopcion = async ( estado = "pendiente") => {
-
-  try {
-    const querySnapshot = await getDocs(collection(FIREBASE_DB, "solicitudesAdopcion"));
-    const documents = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    return documents;
-  } catch (error) {
-    console.log(error);
-  }
-}; */
-
 const getSolicitudesAdopcion = async (estado = "pendiente") => {
   const querySnapshot = await getDocs(
     query(
