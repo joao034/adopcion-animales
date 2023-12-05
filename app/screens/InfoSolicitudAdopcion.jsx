@@ -5,7 +5,9 @@ import Perro from "../../assets/img/perroInfo.png";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import COLORS from "../consts/colors";
 
-const InfoSolicitudAdopcion = ({ ...props }) => {
+const InfoSolicitudAdopcion = ({ route, ...props }) => {
+
+  const { animalId } = route.params;
 
    const [isChecked, setIsChecked] = useState(false)
    const [isButtonDisabled, setIsButtonDisabled] = useState(true) 
@@ -51,7 +53,7 @@ const InfoSolicitudAdopcion = ({ ...props }) => {
 
       <CustomButton
         title={`Llenar solicitud de adopción`}
-        onPress={() => props.navigation.navigate("SolicitudAdopcion")}
+        onPress={() => props.navigation.navigate("SolicitudAdopcion", { animalId: animalId })}
         disabled={isButtonDisabled}
       />
     </View>

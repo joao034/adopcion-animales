@@ -3,8 +3,14 @@ import { useState } from "react";
 import SolicitudAdopcionForm from "../components/forms/SolicitudAdopcionForm";
 import { addDocument } from "../services/adopcionService";
 import { FIREBASE_AUTH } from "../../FirebaseConfig";
+import { useEffect } from "react";
+import { getUserData } from "../services/authService";
+import { getAnimal } from "../services/animalesService";
 
-const SolicitudAdopcion = ({ ...props }) => {
+const SolicitudAdopcion = ({ route, ...props }) => {
+
+  const { animalId } = route.params;
+
   const initialStateSolicitud = {
     //referencias
     idFormDatosPersonales: "",
@@ -40,6 +46,16 @@ const SolicitudAdopcion = ({ ...props }) => {
       parentesco: "",
     },
   }; */
+
+  const getUserName = async ( idUsuario ) => {
+    const userData = await getUserData(idUsuario);
+    return JSON.stringify(userData.nombre) + " " + JSON.stringify(userData.apellido);
+  }
+
+  const getAnimalName = async ( idAnimal ) => {
+    const animalData = await getAnimal(idAnimal);
+    return animalData.nombre;
+  }
 
   // recibe los nuevos datos de la solicitud de adopcion desde el formulario y actualiza el estado
   const onSubmit = (
@@ -84,6 +100,10 @@ const SolicitudAdopcion = ({ ...props }) => {
         formRelacionAnimales,
         "la sección de relacion con los animales."
       );
+
+      const nombreUsuario = await getUserName(FIREBASE_AUTH.currentUser.uid);
+      const nombreAnimal = await getAnimalName(animalId);
+
       await addDocument(
         "solicitudesAdopcion",
         {
@@ -92,15 +112,22 @@ const SolicitudAdopcion = ({ ...props }) => {
           idFormSituacionFamiliar: idFormSituacionFamiliar,
           idFormDomicilio: idFormDomicilio,
           idFormRelacionAnimales: idFormRelacionAnimales,
-          idUsuario: FIREBASE_AUTH.currentUser.uid,
-          idAnimal: "ncmMqTJ9oZBZYAa4eFTx", //agregar id del animal
+          usuario : {
+            id: FIREBASE_AUTH.currentUser.uid,
+            nombre: nombreUsuario
+          },
+          animal : {
+            id: animalId,
+            nombre : nombreAnimal
+          }
         },
         "el formulario de solicitud de adopción."
       );
       Alert.alert("Éxito", "Solicitud de adopción registrada correctamente");
       props.navigation.navigate("List");
     } catch (error) {
-      console.log(error);
+      Alert.alert("Error", "No se pudo registrar la solicitud de adopción");
+      console.log("error", error);
     }
   };
 

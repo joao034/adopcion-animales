@@ -42,10 +42,10 @@ const AnimalForm = ({ title, initialData, onSubmit }) => {
     setEstado(initialData.estado);
   }, [initialData]);
 
-  seEffect(() => {
+  /* useEffect(() => {
     console.log(animal);
-  }, [animal]);
-u
+  }, [animal]); */
+
   const tipoAnimal = [
     { label: "Perro", value: "Perro" },
     { label: "Gato", value: "Gato" },

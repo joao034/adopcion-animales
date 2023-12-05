@@ -38,7 +38,7 @@ const ShowAnimal = ({ route, ...props }) => {
 
         <CustomButton
           title={`Quiero adoptar a ${animal.nombre}`}
-          onPress={() => props.navigation.navigate("InfoSolicitudAdopcion")}
+          onPress={() => props.navigation.navigate("InfoSolicitudAdopcion",  { animalId: animalId }) }
         />
       </CustomCard>
     </View>

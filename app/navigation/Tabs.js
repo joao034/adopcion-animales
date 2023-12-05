@@ -12,6 +12,7 @@ import CreateAnimal from "../screens/CreateAnimal";
 import EditAnimal from "../screens/EditAnimal";
 import SolicitudAdopcion from "../screens/SolicitudAdopcion";
 import InfoSolicitudAdopcion from "../screens/InfoSolicitudAdopcion";
+import ListaSolicitudesAdopcion from "../screens/ListaSolicitudesAdopcion";
 
 const Tab = createBottomTabNavigator();
 
@@ -83,6 +84,21 @@ function TabsAdmin({ route }) {
           tabBarLabel: "Mascotas",
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="dog" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="ListaSolicitudesAdopcion"
+        component={ListaSolicitudesAdopcion}
+        options={{
+          headerShown: false,
+          tabBarLabel: "Solicitudes",
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons
+              name="file-document-outline"
+              color={color}
+              size={size}
+            />
           ),
         }}
       />
