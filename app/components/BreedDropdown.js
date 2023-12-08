@@ -86,6 +86,7 @@ const BreedDropdown = ({ breedSelected, onSelected, error}) => {
   return (
     <View>
       <CustomDropdown
+        label={"Raza:"}
         data={breeds}
         value={value}
         onChange={onChange}

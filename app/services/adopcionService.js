@@ -1,4 +1,12 @@
-import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  where,
+  getDoc,
+  doc,
+} from "firebase/firestore";
 import { FIREBASE_DB } from "../../FirebaseConfig";
 
 const addDocument = async (collectionName, document, mensaje) => {
@@ -26,4 +34,62 @@ const getSolicitudesAdopcion = async (estado = "pendiente") => {
   return solicitudes;
 };
 
-export { addDocument, getSolicitudesAdopcion };
+const getSolicitudAdopcion = async (id) => {
+  try {
+    const docRef = doc(FIREBASE_DB, "solicitudesAdopcion", id);
+    const solicitudSnap = await getDoc(docRef);
+
+    if (!solicitudSnap.exists()) return null;
+
+    if (solicitudSnap.exists()) {
+      const docDatosPersonales = await getDoc(
+        doc(
+          FIREBASE_DB,
+          "formDatosPersonales",
+          solicitudSnap.data().idFormDatosPersonales
+        )
+      );
+
+      const docDomicilio = await getDoc(
+        doc(FIREBASE_DB, "formDomicilio", solicitudSnap.data().idFormDomicilio)
+      );
+
+      const docSituacionFamiliar = await getDoc(
+        doc(
+          FIREBASE_DB,
+          "formSituacionFamiliar",
+          solicitudSnap.data().idFormSituacionFamiliar
+        )
+      );
+
+      const docRelacionAnimales = await getDoc(
+        doc(
+          FIREBASE_DB,
+          "formRelacionAnimales",
+          solicitudSnap.data().idFormRelacionAnimales
+        )
+      );
+
+      if (
+        !docDatosPersonales.exists() ||
+        !docDomicilio.exists() ||
+        !docSituacionFamiliar.exists() ||
+        !docRelacionAnimales.exists()
+      ) {
+        return null;
+      } else {
+        return {
+          solicitudAdopcion: solicitudSnap.data(),
+          formDatosPersonales: docDatosPersonales.data(),
+          formDomicilio: docDomicilio.data(),
+          formSituacionFamiliar: docSituacionFamiliar.data(),
+          formRelacionAnimales: docRelacionAnimales.data(),
+        };
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { addDocument, getSolicitudesAdopcion, getSolicitudAdopcion };

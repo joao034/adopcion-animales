@@ -9,8 +9,9 @@ import { useState, useEffect } from "react";
 import CustomCard from "../components/CustomCard";
 import { getSolicitudesAdopcion } from "../services/adopcionService";
 import CustomDropdown from "../components/CustomDropdown";
+import COLORS from "../consts/colors";
 
-const ListaSolicitudesAdopcion = () => {
+const ListaSolicitudesAdopcion = ( { ...props } ) => {
   const estadosSolicitud = [
     { label: "Pendiente", value: "pendiente" },
     { label: "Aprobado", value: "aprobado" },
@@ -58,7 +59,7 @@ const ListaSolicitudesAdopcion = () => {
         keyExtractor={(item) => item.id}
         data={solicitudesAdopcion}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => { props.navigation.navigate("Show", { solicitudId: item.id }) }}>
             <CustomCard>
               <Text style={styles.text_primary}>
                 Cliente:{item.usuario.nombre}
@@ -99,7 +100,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   link: {
-    color: "#00f",
+    color: COLORS.primary,
     fontSize: 16,
     textAlign: "right",
   },

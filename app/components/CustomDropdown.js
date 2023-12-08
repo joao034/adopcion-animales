@@ -4,6 +4,7 @@ import { AntDesign } from "@expo/vector-icons";
 import COLORS from "../consts/colors";
 
 const CustomDropdown = ({
+  label,
   data,
   value,
   onChange,
@@ -14,10 +15,12 @@ const CustomDropdown = ({
   valueField,
   icon = "",
   error,
+  disable = false,
   onFocus = () => {},
 }) => {
   return (
     <View>
+      <Text style={styles.label}>{label}</Text>
       <Dropdown
         style={styles.dropdown}
         placeholderStyle={styles.placeholderStyle}
@@ -33,6 +36,7 @@ const CustomDropdown = ({
         searchPlaceholder={searchPlaceholder}
         value={value}
         onChange={onChange}
+        disable={disable}
         renderLeftIcon={() => (
           <AntDesign style={styles.icon} color="black" name={icon} size={20} />
         )}
@@ -48,6 +52,12 @@ const styles = StyleSheet.create({
     height: 40,
     borderBottomColor: COLORS.primary,
     borderBottomWidth: 0.5,
+  },
+  label: {
+    color: COLORS.gray,
+    fontSize: 14,
+    marginTop: 7,
+    fontWeight: "bold",
   },
   icon: {
     marginRight: 5,

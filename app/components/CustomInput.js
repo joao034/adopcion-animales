@@ -3,6 +3,7 @@ import COLORS from "../consts/colors";
 import { useState } from "react";
 
 const CustomInput = ({
+  label,
   placeholder,
   value,
   setValue,
@@ -12,12 +13,14 @@ const CustomInput = ({
   error,
   multiline = false,
   numberOfLines,
+  editable = true,
   onFocus = () => {},
 }) => {
   const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <View>
+    <View style={{ marginBottom:10 }}>
+      <Text style={styles.label}>{label}</Text>
       <View
         style={[
           styles.container,
@@ -44,10 +47,11 @@ const CustomInput = ({
           keyboardType={keyboardType}
           multiline={multiline}
           numberOfLines={numberOfLines}
+          editable={editable}
         ></TextInput>
       </View>
       {error && (
-        <Text style={{ color: COLORS.red, marginTop: 5 }}>{error}</Text>
+        <Text style={{ color: COLORS.red, marginVertical:5 }}>{error}</Text>
       )}
     </View>
   );
@@ -60,7 +64,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     padding: 10,
-    marginVertical: 5,
+    //marginBottom: 10,
+  },
+  label: {
+    color: COLORS.gray,
+    fontSize: 14,
+    marginBottom: 5,
+    fontWeight: "bold",
   },
 });
 

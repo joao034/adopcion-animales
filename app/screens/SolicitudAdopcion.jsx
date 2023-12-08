@@ -1,9 +1,8 @@
 import { View, Text, Button, Alert } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SolicitudAdopcionForm from "../components/forms/SolicitudAdopcionForm";
 import { addDocument } from "../services/adopcionService";
 import { FIREBASE_AUTH } from "../../FirebaseConfig";
-import { useEffect } from "react";
 import { getUserData } from "../services/authService";
 import { getAnimal } from "../services/animalesService";
 
@@ -26,31 +25,13 @@ const SolicitudAdopcion = ({ route, ...props }) => {
 
   const [solicitudAdopcion, setSolitudAdopcion] = useState(initialStateSolicitud);
 
-  /* const initialFormDatosPersonales = {
-    //referencias
-    //dSolicitudAdopcion: "",
-    //datos
-    nombreCompleto: "",
-    cedula: "",
-    fechaNacimiento: "",
-    telefonoCasa: "",
-    celular: "",
-    correo: "",
-    direccion: "",
-    ocupacion: "",
-    edad: 0,
-    nivelInstruccion: "",
-    referencia: {
-      nombreCompleto: "",
-      celular: "",
-      parentesco: "",
-    },
-  }; */
-
   const getUserName = async ( idUsuario ) => {
     const userData = await getUserData(idUsuario);
-    return JSON.stringify(userData.nombre) + " " + JSON.stringify(userData.apellido);
+    console.log("userData", userData)
+    return JSON.stringify(userData.nombres) + " " + JSON.stringify(userData.apellidos);
   }
+
+
 
   const getAnimalName = async ( idAnimal ) => {
     const animalData = await getAnimal(idAnimal);
@@ -133,7 +114,7 @@ const SolicitudAdopcion = ({ route, ...props }) => {
 
   return (
     <View>
-      <SolicitudAdopcionForm onSubmit={onSubmit} />
+      <SolicitudAdopcionForm onSubmit={onSubmit} editable={true}/>
     </View>
   );
 };

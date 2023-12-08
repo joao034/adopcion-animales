@@ -48,6 +48,7 @@ const Login = ({ navigation }) => {
       </View>
       <View style={styles.inputContainer}>
         <CustomInput
+          label={"Correo electrónico"}
           value={email}
           setValue={setEmail}
           placeholder="Correo electrónico"
@@ -55,6 +56,7 @@ const Login = ({ navigation }) => {
           error={errors.email}
         ></CustomInput>
         <CustomInput
+          label={"Contraseña"}
           value={password}
           setValue={setPassword}
           placeholder="Contraseña"

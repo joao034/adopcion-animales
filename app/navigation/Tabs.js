@@ -13,11 +13,14 @@ import EditAnimal from "../screens/EditAnimal";
 import SolicitudAdopcion from "../screens/SolicitudAdopcion";
 import InfoSolicitudAdopcion from "../screens/InfoSolicitudAdopcion";
 import ListaSolicitudesAdopcion from "../screens/ListaSolicitudesAdopcion";
+import ShowSolicitudAdopcion from "../screens/ShowSolicitudAdopcion";
+import AprobarSolicitudAdopcion from "../screens/AprobarSolicitudAdopcion";
 
 const Tab = createBottomTabNavigator();
 
 //stack del modulo de mascotas
 const StackMascotas = createNativeStackNavigator();
+const StackSolicitudesAdopcion = createNativeStackNavigator();
 
 function StackMascotasScreen({ route }) {
   return (
@@ -67,6 +70,36 @@ function StackMascotasScreen({ route }) {
   );
 }
 
+function StackSolicitudesAdopcionScreen({ route }) {
+  return (
+    <StackSolicitudesAdopcion.Navigator>
+      <StackSolicitudesAdopcion.Screen
+        name="List"
+        initialParams={route.params}
+        component={ListaSolicitudesAdopcion}
+        options={{
+          title: "Lista de Solicitudes de Adopción",
+        }}
+      />
+      <StackSolicitudesAdopcion.Screen
+        name="Show"
+        component={ShowSolicitudAdopcion}
+        options={{
+          title: "Solicitud de Adopción",
+        }}
+      />
+      <StackSolicitudesAdopcion.Screen
+        name="Aprobar"
+        component={AprobarSolicitudAdopcion}
+        options={{
+          title: "Aprobar Solicitud de Adopción",
+        }}
+      />
+    </StackSolicitudesAdopcion.Navigator>
+  );
+}
+    
+
 function TabsAdmin({ route }) {
   return (
     <Tab.Navigator
@@ -88,8 +121,9 @@ function TabsAdmin({ route }) {
         }}
       />
       <Tab.Screen
-        name="ListaSolicitudesAdopcion"
-        component={ListaSolicitudesAdopcion}
+        name="StackSolicitudesAdopcion"
+        initialParams={route.params}
+        component={StackSolicitudesAdopcionScreen}
         options={{
           headerShown: false,
           tabBarLabel: "Solicitudes",

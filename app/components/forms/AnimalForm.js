@@ -240,6 +240,7 @@ const AnimalForm = ({ title, initialData, onSubmit }) => {
         </TouchableOpacity>
         <View style={styles.inputContainer}>
           <CustomInput
+            label={"Nombre del animal:"}
             placeholder={"Nombre"}
             onChangeText={(value) => handleChangeText(value, "nombre")}
             value={animal.nombre || ""}
@@ -248,6 +249,7 @@ const AnimalForm = ({ title, initialData, onSubmit }) => {
           />
 
           <CustomDropdown
+            label={"Tipo de animal:"}
             data={tipoAnimal}
             value={especie || ""}
             onChange={(item) =>
@@ -270,6 +272,7 @@ const AnimalForm = ({ title, initialData, onSubmit }) => {
           />
 
           <CustomDropdown
+            label={"Sexo:"}
             data={dataSexo}
             value={sexo || ""}
             onChange={(item) =>
@@ -282,6 +285,7 @@ const AnimalForm = ({ title, initialData, onSubmit }) => {
             error={errors.sexo}
           />
           <CustomDropdown
+            label={"Estado de adopción"}
             data={dataEstado}
             value={estado || ""}
             onChange={(item) =>
@@ -295,6 +299,7 @@ const AnimalForm = ({ title, initialData, onSubmit }) => {
           />
 
           <CustomDropdown
+            label={"Esterilizado:"}
             data={dataEsterilizado}
             value={esterilizado || ""}
             onChange={(item) =>
@@ -312,6 +317,7 @@ const AnimalForm = ({ title, initialData, onSubmit }) => {
           />
 
           <CustomDropdown
+          label={"Etapa de vida:"}
             data={dataEdad}
             value={edad || ""}
             onChange={(item) =>
@@ -325,6 +331,7 @@ const AnimalForm = ({ title, initialData, onSubmit }) => {
           />
 
           <CustomDropdown
+            label={"Tamaño:"}
             data={dataTamanio}
             value={tamanio || ""}
             onChange={(item) =>
@@ -342,6 +349,7 @@ const AnimalForm = ({ title, initialData, onSubmit }) => {
           />
 
           <CustomInput
+            label={"Peso en kg:"}
             placeholder={"Peso"}
             onChangeText={(value) => handleChangeText(value, "peso")}
             value={animal.peso || ""}
@@ -351,6 +359,7 @@ const AnimalForm = ({ title, initialData, onSubmit }) => {
           />
 
           <CustomInput
+            label={"Características:"}
             placeholder={"Características"}
             onChangeText={(value) => handleChangeText(value, "caracteristicas")}
             value={animal.caracteristicas || ""}

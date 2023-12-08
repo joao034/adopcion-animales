@@ -78,6 +78,7 @@ const Register = () => {
       <Text style={styles.title}>Nuevo Usuario</Text>
       <View style={styles.inputContainer}>
         <CustomInput
+          label={"Nombres"}
           value={nombres}
           setValue={setNombres}
           placeholder="Nombres"
@@ -85,6 +86,7 @@ const Register = () => {
           onFocus={() => handleError('nombres', '')}
         ></CustomInput>
         <CustomInput
+          label={"Apellidos"}
           value={apellidos}
           setValue={setApellidos}
           placeholder="Apellidos"
@@ -92,6 +94,7 @@ const Register = () => {
           onFocus={() => handleError('apellidos', '')}
         ></CustomInput>
         <CustomInput
+          label={"Cédula"}
           value={cedula}
           setValue={setCedula}
           placeholder="Cédula"
@@ -100,6 +103,7 @@ const Register = () => {
           onFocus={() => handleError('cedula', '')}
         ></CustomInput>
         <CustomInput
+          label={"Correo electrónico"}
           value={email}
           setValue={setEmail}
           placeholder="Correo electrónico"
@@ -108,6 +112,7 @@ const Register = () => {
           onFocus={() => handleError('email', '')}
         ></CustomInput>
         <CustomInput
+          label={"Contraseña"}
           value={password}
           setValue={setPassword}
           placeholder="Contraseña"
