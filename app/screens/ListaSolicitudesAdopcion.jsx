@@ -14,8 +14,8 @@ import COLORS from "../consts/colors";
 const ListaSolicitudesAdopcion = ( { ...props } ) => {
   const estadosSolicitud = [
     { label: "Pendiente", value: "pendiente" },
-    { label: "Aprobado", value: "aprobado" },
-    { label: "Rechazado", value: "rechazado" },
+    { label: "Aprobada", value: "aprobada" },
+    { label: "Rechazada", value: "rechazada" },
   ];
 
   const [solicitudesAdopcion, setSolicitudesAdopcion] = useState([]);
@@ -30,6 +30,20 @@ const ListaSolicitudesAdopcion = ( { ...props } ) => {
     };
     getData();
   }, [estadoSolicitud]);
+
+  //Recargar la lista de solicitudes cuando se cambia de estado
+  useEffect(() => {
+    const unsubscribe = props.navigation.addListener("focus", () => {
+      const getData = async () => {
+        const dataSolicitudesAdopcion = await getSolicitudesAdopcion(estadoSolicitud);
+        if (dataSolicitudesAdopcion) {
+          setSolicitudesAdopcion(dataSolicitudesAdopcion);
+        }
+      }
+      getData();
+    });
+    return unsubscribe;
+  }, [props.navigation]);
 
   const getDate = (dateObject) => {
     const seconds = dateObject.seconds;

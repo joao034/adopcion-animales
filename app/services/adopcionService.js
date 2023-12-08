@@ -6,6 +6,7 @@ import {
   where,
   getDoc,
   doc,
+  setDoc,
 } from "firebase/firestore";
 import { FIREBASE_DB } from "../../FirebaseConfig";
 
@@ -92,4 +93,15 @@ const getSolicitudAdopcion = async (id) => {
   }
 };
 
-export { addDocument, getSolicitudesAdopcion, getSolicitudAdopcion };
+const updateSolicitudAdopcion = async (solicitudAdopcion, id) => {
+  try {
+    const docRef = doc(FIREBASE_DB, "solicitudesAdopcion", id);
+    await setDoc(docRef, { ...solicitudAdopcion, fechaRespuesta: new Date() });
+    return true;
+  } catch (error) {
+    throw new Error(`Error al actualizar la solicitud de adopción: ${error.message}`);
+  }
+};
+
+
+export { addDocument, getSolicitudesAdopcion, getSolicitudAdopcion, updateSolicitudAdopcion };

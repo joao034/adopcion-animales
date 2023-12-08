@@ -9,7 +9,8 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 const formDatosPersonalesForm = ({
   onSubmit,
   dataSolicitudAdopcion,
-  editable
+  editable,
+  ...props
 }) => {
   const initialStateFormDatosPersonales = {
     nombreCompleto: "",
@@ -469,7 +470,7 @@ const formDatosPersonalesForm = ({
                 editable={editable}
               />
               <Text style={styles.subsubtitle}>Instrucción:</Text>
-                <CustomDropdown
+              <CustomDropdown
                 label={"Nivel de instrucción"}
                 data={dataInstruccion}
                 value={formDatosPersonales.instruccion || ""}
@@ -487,7 +488,7 @@ const formDatosPersonalesForm = ({
                 error={errors.instruccion}
                 disable={!editable}
               />
-              
+
               <Text style={styles.subsubtitle}>Teléfonos de Contacto:</Text>
               <CustomInput
                 label={"Celular"}
@@ -771,7 +772,7 @@ const formDatosPersonalesForm = ({
                   handleChangeTextRA(
                     item.value,
                     "tipoMascota",
-                    setUltimaMascota(item.value)
+                    setTipoMascota(item.value)
                   )
                 }
                 labelField="label"
@@ -848,8 +849,11 @@ const formDatosPersonalesForm = ({
             <Text>... Cargando Sección 4</Text>
           )}
         </View>
-        { !dataSolicitudAdopcion && <CustomButton title="Guardar" onPress={validate} /> }
-        
+        {!dataSolicitudAdopcion && (
+          <CustomButton title="Guardar" onPress={validate} />
+        )}
+
+        <View>{props.children}</View>
       </View>
     </ScrollView>
   );
