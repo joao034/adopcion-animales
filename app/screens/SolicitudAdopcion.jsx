@@ -31,8 +31,6 @@ const SolicitudAdopcion = ({ route, ...props }) => {
     return JSON.stringify(userData.nombres) + " " + JSON.stringify(userData.apellidos);
   }
 
-
-
   const getAnimalName = async ( idAnimal ) => {
     const animalData = await getAnimal(idAnimal);
     return animalData.nombre;

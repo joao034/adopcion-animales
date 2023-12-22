@@ -35,6 +35,7 @@ function StackMascotasScreen({ route }) {
       />
       <StackMascotas.Screen
         name="Show"
+        initialParams={route.params}
         component={ShowAnimal}
         options={{
           title: "Mascota",
@@ -45,6 +46,7 @@ function StackMascotasScreen({ route }) {
         component={InfoSolicitudAdopcion}
         options={{
           title: "Información solicitud de adopción",
+          
         }}
       />
       <StackMascotas.Screen
@@ -187,6 +189,7 @@ function TabsCliente({ route }) {
         name="Información"
         component={Info}
         options={{
+          headerShown: false,
           tabBarLabel: "Información",
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="info" color={color} size={size} />

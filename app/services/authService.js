@@ -1,11 +1,14 @@
 import { FIREBASE_AUTH, FIREBASE_DB } from "../../FirebaseConfig";
-import { addDoc, collection, where, getDocs, query} from "firebase/firestore"; 
-import {  signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
+import { addDoc, collection, where, getDocs, query } from "firebase/firestore";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
 
-const registerUser = async ( nombres, apellidos, email, password , cedula ) => {
+const registerUser = async (nombres, apellidos, email, password, cedula) => {
   try {
     await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
-    await addNewUser( nombres, apellidos, email, cedula );
+    await addNewUser(nombres, apellidos, email, cedula);
     return true;
   } catch (error) {
     console.error("error ->", error);
@@ -14,8 +17,7 @@ const registerUser = async ( nombres, apellidos, email, password , cedula ) => {
 };
 
 //solo sirve para crear usuarios clientes
-const addNewUser = async ( nombres, apellidos, email, cedula ) => {
-  console.log('addNewUser()')
+const addNewUser = async (nombres, apellidos, email, cedula) => {
   await addDoc(collection(FIREBASE_DB, "users"), {
     id: FIREBASE_AUTH.currentUser.uid,
     nombres,
@@ -26,13 +28,9 @@ const addNewUser = async ( nombres, apellidos, email, cedula ) => {
   });
 };
 
-const loginUser = async ( email, password ) => {
+const loginUser = async (email, password) => {
   try {
-    await signInWithEmailAndPassword(
-      FIREBASE_AUTH,
-      email,
-      password
-    );
+    await signInWithEmailAndPassword(FIREBASE_AUTH, email, password);
     return true;
   } catch (error) {
     console.error("error ->", error);
@@ -40,13 +38,17 @@ const loginUser = async ( email, password ) => {
   }
 };
 
-async function getUserData( uid ) {
+async function getUserData(uid) {
   try {
     const q = query(collection(FIREBASE_DB, "users"), where("id", "==", uid));
     const querySnapshot = await getDocs(q);
     if (querySnapshot.size > 0) {
       const doc = querySnapshot.docs[0];
-      const userData = doc.data();
+      const userData = {
+        docId: doc.id,
+        ...doc.data(),
+      };
+
       return userData;
     } else {
       return null;
@@ -57,4 +59,20 @@ async function getUserData( uid ) {
   }
 }
 
-export { registerUser, loginUser, getUserData };
+async function getUserRef ( id ){
+  try {
+    const q = query(collection(FIREBASE_DB, "users"), where("id", "==", id));
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.size > 0) {
+      const doc = querySnapshot.docs[0];
+      return doc.id;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("error ->", error);
+    throw error; 
+  }
+}
+
+export { registerUser, loginUser, getUserData, getUserRef };

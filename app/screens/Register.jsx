@@ -1,4 +1,11 @@
-import { KeyboardAvoidingView, StyleSheet, View, Text, Alert} from "react-native";
+import {
+  KeyboardAvoidingView,
+  StyleSheet,
+  View,
+  Text,
+  Alert,
+  ScrollView,
+} from "react-native";
 import CustomInput from "../components/CustomInput";
 import { useState } from "react";
 import CustomButton from "../components/CustomButton";
@@ -28,7 +35,7 @@ const Register = () => {
     if (!cedula) {
       handleError("cedula", "Ingrese la cédula");
       isValid = false;
-    }else if ( cedula.length < 10 ) {
+    } else if (cedula.length < 10) {
       handleError("cedula", "La cédula debe tener 10 dígitos");
       isValid = false;
     }
@@ -42,7 +49,7 @@ const Register = () => {
     if (!password) {
       handleError("password", "Ingrese la contraseña");
       isValid = false;
-    }else if (password.length < 6) {
+    } else if (password.length < 6) {
       handleError("password", "La contraseña debe tener al menos 6 caracteres");
       isValid = false;
     }
@@ -65,8 +72,7 @@ const Register = () => {
         password,
         cedula
       );
-      if (success) 
-        Alert.alert("Usuario registrado correctamente");
+      if (success) Alert.alert("Usuario registrado correctamente");
     } catch (error) {
       console.error("error ->", error);
       Alert.alert("No se pudo registrar el usuario");
@@ -74,55 +80,57 @@ const Register = () => {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container}>
-      <Text style={styles.title}>Nuevo Usuario</Text>
-      <View style={styles.inputContainer}>
-        <CustomInput
-          label={"Nombres"}
-          value={nombres}
-          setValue={setNombres}
-          placeholder="Nombres"
-          error={errors.nombres}
-          onFocus={() => handleError('nombres', '')}
-        ></CustomInput>
-        <CustomInput
-          label={"Apellidos"}
-          value={apellidos}
-          setValue={setApellidos}
-          placeholder="Apellidos"
-          error={errors.apellidos}
-          onFocus={() => handleError('apellidos', '')}
-        ></CustomInput>
-        <CustomInput
-          label={"Cédula"}
-          value={cedula}
-          setValue={setCedula}
-          placeholder="Cédula"
-          keyboardType="numeric"
-          error={errors.cedula}
-          onFocus={() => handleError('cedula', '')}
-        ></CustomInput>
-        <CustomInput
-          label={"Correo electrónico"}
-          value={email}
-          setValue={setEmail}
-          placeholder="Correo electrónico"
-          keyboardType="email-address"
-          error={errors.email}
-          onFocus={() => handleError('email', '')}
-        ></CustomInput>
-        <CustomInput
-          label={"Contraseña"}
-          value={password}
-          setValue={setPassword}
-          placeholder="Contraseña"
-          secureTextEntry
-          error={errors.password}
-          onFocus={() => handleError('password', '')}
-        ></CustomInput>
-        <CustomButton onPress={validate} title={"Registrar"}></CustomButton>
-      </View>
-    </KeyboardAvoidingView>
+    <ScrollView>
+      <KeyboardAvoidingView style={styles.container}>
+        <Text style={styles.title}>Nuevo Usuario</Text>
+        <View style={styles.inputContainer}>
+          <CustomInput
+            label={"Nombres"}
+            value={nombres}
+            setValue={setNombres}
+            placeholder="Nombres"
+            error={errors.nombres}
+            onFocus={() => handleError("nombres", "")}
+          ></CustomInput>
+          <CustomInput
+            label={"Apellidos"}
+            value={apellidos}
+            setValue={setApellidos}
+            placeholder="Apellidos"
+            error={errors.apellidos}
+            onFocus={() => handleError("apellidos", "")}
+          ></CustomInput>
+          <CustomInput
+            label={"Cédula"}
+            value={cedula}
+            setValue={setCedula}
+            placeholder="Cédula"
+            keyboardType="numeric"
+            error={errors.cedula}
+            onFocus={() => handleError("cedula", "")}
+          ></CustomInput>
+          <CustomInput
+            label={"Correo electrónico"}
+            value={email}
+            setValue={setEmail}
+            placeholder="Correo electrónico"
+            keyboardType="email-address"
+            error={errors.email}
+            onFocus={() => handleError("email", "")}
+          ></CustomInput>
+          <CustomInput
+            label={"Contraseña"}
+            value={password}
+            setValue={setPassword}
+            placeholder="Contraseña"
+            secureTextEntry
+            error={errors.password}
+            onFocus={() => handleError("password", "")}
+          ></CustomInput>
+          <CustomButton onPress={validate} title={"Registrar"}></CustomButton>
+        </View>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 
@@ -133,7 +141,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     paddingTop: 20,
-    backgroundColor: COLORS.white
+    backgroundColor: COLORS.white,
   },
 
   title: {

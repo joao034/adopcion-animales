@@ -22,6 +22,14 @@ const Profile = ({ route, ...props }) => {
     });
   }, []);
 
+  useEffect(() => {
+    const getUser = async () => {
+      const user = await getUserData(FIREBASE_AUTH.currentUser.uid);
+      console.log("user", user);
+    };
+    getUser();
+  }, []);
+
   /* useEffect(() => {
     try {
       const getUser = async () => {
@@ -47,7 +55,7 @@ const Profile = ({ route, ...props }) => {
   return (
     <View>
       {authUser ? (
-        <Text>Bienvenido {authUser.nombres}</Text>
+        <Text>Bienvenido {authUser.id}</Text>
       ) : (
         <Text>Cargando...</Text>
       )}

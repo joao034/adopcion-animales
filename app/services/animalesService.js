@@ -6,8 +6,11 @@ import {
   getDocs,
   getDoc,
   deleteDoc,
-  setDoc
+  setDoc,
+  where,
 } from "firebase/firestore";
+import { getUserData, getUserRef } from "./authService";
+
 import * as FileSystem from "expo-file-system";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
@@ -69,6 +72,24 @@ const deleteAnimal = async (id) => {
   }
 };
 
+const addToFavorites = async (animalId, userId) => {
+  try {
+    //user = await getUserData(userId);
+
+    const userRef = await doc(FIREBASE_DB, "users", where("id", "==", userId));
+    console.log("userRef", userRef);
+    const user = await getDoc(userRef);
+    const updatedFavoritos = Array.isArray(userData.favoritos) ? userData.favorites : [];
+    //const updatedFavoritos = [...user.data().favoritos, animalId];
+
+    //agregar al documento del usuario el id del animal en la propiedad tipo array de favoritos
+    await setDoc(getUserRef, { ...user, favorites: updatedFavoritos });
+    return true;
+  } catch (error) {
+    throw new Error(`Error al agregar a favoritos: ${error.message}`);
+  }
+};
+
 const uploadImage = async (image) => {
   try {
     const { uri } = await FileSystem.getInfoAsync(image);
@@ -100,4 +121,12 @@ const uploadImage = async (image) => {
   }
 };
 
-export { getAnimales, addAnimal, getAnimal, deleteAnimal, updateAnimal, uploadImage };
+export {
+  getAnimales,
+  addAnimal,
+  getAnimal,
+  deleteAnimal,
+  updateAnimal,
+  uploadImage,
+  addToFavorites,
+};

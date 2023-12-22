@@ -48,7 +48,6 @@ const AprobarSolicitudAdopcion = ({ route, ...props }) => {
   };
 
   const handleChangeStateSolicitud = async () => {
-    console.log(solicitud.id);
     const response = await updateSolicitudAdopcion(solicitud, solicitudId);
     if (response) {
       Alert.alert("Éxito", "!Solicitud editada correctamente!");

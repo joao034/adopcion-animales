@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
-import { getAnimal } from "../services/animalesService";
+import { getAnimal, addToFavorites } from "../services/animalesService";
 import CustomCard from "../components/CustomCard";
 import CustomButton from "../components/CustomButton";
 
 const ShowAnimal = ({ route, ...props }) => {
-  const { animalId } = route.params;
+  const { animalId, authUser } = route.params;
 
   const [animal, setAnimal] = useState({});
 
@@ -16,6 +16,22 @@ const ShowAnimal = ({ route, ...props }) => {
     };
     getDataAnimal(animalId);
   }, []);
+
+  useEffect(() => {
+    //console.log(authUser.id)
+  }, [])
+
+  const agregarEnFavoritos = () => {
+    try{
+      const success = addToFavorites( animalId, authUser.id)
+      console.log(success)
+      if(success){
+        console.log("Agregado a favoritos")
+      }
+    }catch(error){
+      console.log("Error al agregar a favoritos")
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -39,6 +55,10 @@ const ShowAnimal = ({ route, ...props }) => {
         <CustomButton
           title={`Quiero adoptar a ${animal.nombre}`}
           onPress={() => props.navigation.navigate("InfoSolicitudAdopcion",  { animalId: animalId }) }
+        />
+        <CustomButton
+          title={`Agregar a ${animal.nombre} en mis favoritos`}
+          onPress={() => agregarEnFavoritos() }
         />
       </CustomCard>
     </View>
