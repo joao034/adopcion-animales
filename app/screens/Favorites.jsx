@@ -24,11 +24,6 @@ const Favorites = ({ ...props }) => {
     getFavoritos();
   }, []);
 
-
-/*   useEffect(() => {
-    console.log(listaFavoritos);
-  }, [listaFavoritos]);
- */
   return (
   
       <View style={styles.container}>
