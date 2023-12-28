@@ -59,7 +59,7 @@ async function getUserData(uid) {
   }
 }
 
-async function getUserRef ( id ){
+async function getUserId ( id ){
   try {
     const q = query(collection(FIREBASE_DB, "users"), where("id", "==", id));
     const querySnapshot = await getDocs(q);
@@ -75,4 +75,4 @@ async function getUserRef ( id ){
   }
 }
 
-export { registerUser, loginUser, getUserData, getUserRef };
+export { registerUser, loginUser, getUserData, getUserId };

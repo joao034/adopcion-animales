@@ -72,24 +72,6 @@ const deleteAnimal = async (id) => {
   }
 };
 
-const addToFavorites = async (animalId, userId) => {
-  try {
-    //user = await getUserData(userId);
-
-    const userRef = await doc(FIREBASE_DB, "users", where("id", "==", userId));
-    console.log("userRef", userRef);
-    const user = await getDoc(userRef);
-    const updatedFavoritos = Array.isArray(userData.favoritos) ? userData.favorites : [];
-    //const updatedFavoritos = [...user.data().favoritos, animalId];
-
-    //agregar al documento del usuario el id del animal en la propiedad tipo array de favoritos
-    await setDoc(getUserRef, { ...user, favorites: updatedFavoritos });
-    return true;
-  } catch (error) {
-    throw new Error(`Error al agregar a favoritos: ${error.message}`);
-  }
-};
-
 const uploadImage = async (image) => {
   try {
     const { uri } = await FileSystem.getInfoAsync(image);
@@ -128,5 +110,4 @@ export {
   deleteAnimal,
   updateAnimal,
   uploadImage,
-  addToFavorites,
 };

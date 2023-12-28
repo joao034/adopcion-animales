@@ -20,19 +20,19 @@ const Info = () => {
         </CustomCard>
         <Text style={styles.subtitle}>Consejos de cuidado de la mascota</Text>
         <CustomCard>
-          <Text style={styles.text}>
+          <Text style={styles.items}>
             "Esteriliza a tu mascota para controlar la población y mejorar su
             salud."
           </Text>
         </CustomCard>
         <CustomCard>
-          <Text style={styles.text}>
+          <Text style={styles.items}>
             "Proporciona atención veterinaria regular para garantizar su
             bienestar."
           </Text>
         </CustomCard>
         <CustomCard>
-          <Text style={styles.text}>
+          <Text style={styles.items}>
             "Adopta solo si estás comprometido a cuidar a tu mascota durante
             toda su vida."
           </Text>
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    margin: 20,
+    padding: 20,
   },
   title: {
     fontSize: 20,
@@ -64,6 +64,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: COLORS.black,
     textAlign: "justify",
+  },
+  items:{
+    fontSize: 16,
+    color: COLORS.black,
+    textAlign: "justify",
+    marginBottom: 10,
+    fontWeight: "bold",
   },
   subtitle: {
     fontSize: 18,

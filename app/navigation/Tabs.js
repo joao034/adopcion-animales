@@ -46,7 +46,6 @@ function StackMascotasScreen({ route }) {
         component={InfoSolicitudAdopcion}
         options={{
           title: "Información solicitud de adopción",
-          
         }}
       />
       <StackMascotas.Screen
@@ -168,6 +167,7 @@ function TabsAdmin({ route }) {
         initialParams={route.params}
         options={{
           tabBarLabel: "Perfil",
+          title: "Perfil",
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="account" color={color} size={size} />
           ),
@@ -226,6 +226,7 @@ function TabsCliente({ route }) {
         name="Favorites"
         component={Favorites}
         options={{
+          title: "Lista de Animales Favoritos",
           tabBarLabel: "Favoritos",
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="heart" color={color} size={size} />
@@ -247,6 +248,7 @@ function TabsCliente({ route }) {
         component={Profile}
         initialParams={route.params}
         options={{
+          title: "Perfil",
           tabBarLabel: "Perfil",
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="account" color={color} size={size} />

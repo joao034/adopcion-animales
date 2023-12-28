@@ -1,33 +1,106 @@
-import { View, Text } from "react-native";
+import { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+  Image,
+} from "react-native";
+import { getAnimalesFavoritos } from "../services/favoritosService";
+import CustomCard from "../components/CustomCard";
+import COLORS from "../consts/colors";
+import { FIREBASE_AUTH } from "../../FirebaseConfig";
+
+const Favorites = ({ ...props }) => {
+  const [listaFavoritos, setListaFavoritos] = useState([]);
+
+  useEffect(() => {
+    const getFavoritos = async () => {
+      const favoritos = await getAnimalesFavoritos(FIREBASE_AUTH.currentUser.uid);
+      setListaFavoritos(favoritos);
+    };
+    getFavoritos();
+  }, []);
 
 
-const Favorites = () => {
+/*   useEffect(() => {
+    console.log(listaFavoritos);
+  }, [listaFavoritos]);
+ */
   return (
-    <View>
-      
-      <FlatList
-        keyExtractor={(item) => item.id}
-        data={solicitudesAdopcion}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => { props.navigation.navigate("Show", { solicitudId: item.id }) }}>
-            <CustomCard>
-              <Text style={styles.text_primary}>
-                Cliente:{item.usuario.nombre}
-              </Text>
-              {/* <Text style={styles.text}>
-                Fecha: {getDate(item.fechaRegistro)}
-              </Text> */}
-              <Text style={styles.text}>
-                Posible Adoptante para: {item.animal.nombre}
-              </Text>
-              <Text style={styles.link}>Ver info</Text>
-            </CustomCard>
-          </TouchableOpacity>
+  
+      <View style={styles.container}>
+        <Text style={{color: ""}}></Text>
+        {listaFavoritos.length === 0 && (
+          <Text style={styles.title}>No tiene animales favoritos.</Text>
         )}
-      />
 
-    </View>
+        <FlatList
+          data={listaFavoritos}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate("Show", { animalId: item.id });
+              }}
+            >
+              <CustomCard>
+                <View style={styles.item}>
+                  <Image
+                    style={styles.image}
+                    source={{ uri: item.imagenUrl }}
+                  />
+                  <View style={styles.detailItem}>
+                    <Text style={styles.text}> Nombre: {item.nombre}</Text>
+                    <Text style={{ textAlign: "center" }}>
+                      {item.sexo} - {item.tamanio}
+                    </Text>
+                    <Text style={styles.text}> Estado: {item.estado}</Text>
+                  </View>
+                  <Text style={styles.redirect}>Ver</Text>
+                </View>
+              </CustomCard>
+            </TouchableOpacity>
+          )}
+        />
+      </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    padding: 10,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  text: {
+    fontSize: 16,
+    fontWeight: "bold",
+
+  },
+  item: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  detailItem: {
+    flex: 1,
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  image: {
+    width: 140,
+    height: 100,
+    borderRadius: 5,
+  },
+  redirect: 
+  { alignSelf: "flex-end", fontWeight: "bold", color: COLORS.primary},
+});
 
 export default Favorites;
