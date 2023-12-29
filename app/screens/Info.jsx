@@ -5,6 +5,7 @@ import Informacion from "../../assets/img/info.png";
 import CustomCard from "../components/CustomCard";
 
 const Info = () => {
+  console.log('Biecnvenidio')
   return (
     <ScrollView>
       <View style={styles.container}>

@@ -11,56 +11,73 @@ import {
 import { getAnimalesFavoritos } from "../services/favoritosService";
 import CustomCard from "../components/CustomCard";
 import COLORS from "../consts/colors";
-import { FIREBASE_AUTH } from "../../FirebaseConfig";
+import { FIREBASE_AUTH, FIREBASE_DB } from "../../FirebaseConfig";
+import { collection, onSnapshot } from "firebase/firestore";
 
-const Favorites = ({ ...props }) => {
+const Favorites = ({ route, ...props }) => {
   const [listaFavoritos, setListaFavoritos] = useState([]);
 
   useEffect(() => {
     const getFavoritos = async () => {
-      const favoritos = await getAnimalesFavoritos(FIREBASE_AUTH.currentUser.uid);
+      const favoritos = await getAnimalesFavoritos(
+        FIREBASE_AUTH.currentUser.uid
+      );
       setListaFavoritos(favoritos);
     };
     getFavoritos();
-  }, []);
+  }, [ route.params ]); 
+
+  /* useEffect(() => {
+    const unsuscribe = onSnapshot(
+      collection(FIREBASE_DB, "users"),
+      (snapshot) => {
+        // listen to changes in the collection in firestore
+        snapshot.docChanges().forEach((change) => {
+          if (change.type === "added" || change.type === "modified") {
+            // if a new file is added, add it to the state
+            setListaFavoritos((prevFiles) => [...prevFiles, change.doc.data()]);
+          }
+        });
+      }
+      
+    );
+    return () => unsuscribe();
+    
+  }, []); */
 
   return (
-  
-      <View style={styles.container}>
-        <Text style={{color: ""}}></Text>
-        {listaFavoritos.length === 0 && (
-          <Text style={styles.title}>No tiene animales favoritos.</Text>
-        )}
+    <View style={styles.container}>
+      <Text style={{ color: "" }}></Text>
+      {listaFavoritos.length === 0 && (
+        <Text style={styles.title}>No tiene animales favoritos.</Text>
+      )}
 
-        <FlatList
-          data={listaFavoritos}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() => {
-                props.navigation.navigate("Show", { animalId: item.id });
-              }}
-            >
-              <CustomCard>
-                <View style={styles.item}>
-                  <Image
-                    style={styles.image}
-                    source={{ uri: item.imagenUrl }}
-                  />
-                  <View style={styles.detailItem}>
-                    <Text style={styles.text}> Nombre: {item.nombre}</Text>
-                    <Text style={{ textAlign: "center" }}>
-                      {item.sexo} - {item.tamanio}
-                    </Text>
-                    <Text style={styles.text}> Estado: {item.estado}</Text>
-                  </View>
-                  <Text style={styles.redirect}>Ver</Text>
+      <FlatList
+        data={listaFavoritos}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            onPress={() => {
+              props.navigation.navigate("Show", { animalId: item.id });
+            }}
+          >
+            <CustomCard>
+              <View style={styles.item}>
+                <Image style={styles.image} source={{ uri: item.imagenUrl }} />
+                <View style={styles.detailItem}>
+                  <Text style={styles.text}> Nombre: {item.nombre}</Text>
+                  <Text style={{ textAlign: "center" }}>
+                    {item.sexo} - {item.tamanio}
+                  </Text>
+                  <Text style={styles.text}> Estado: {item.estado}</Text>
                 </View>
-              </CustomCard>
-            </TouchableOpacity>
-          )}
-        />
-      </View>
+                <Text style={styles.redirect}>Ver</Text>
+              </View>
+            </CustomCard>
+          </TouchableOpacity>
+        )}
+      />
+    </View>
   );
 };
 
@@ -77,7 +94,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     fontWeight: "bold",
-
   },
   item: {
     flex: 1,
@@ -94,8 +110,11 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 5,
   },
-  redirect: 
-  { alignSelf: "flex-end", fontWeight: "bold", color: COLORS.primary},
+  redirect: {
+    alignSelf: "flex-end",
+    fontWeight: "bold",
+    color: COLORS.primary,
+  },
 });
 
 export default Favorites;

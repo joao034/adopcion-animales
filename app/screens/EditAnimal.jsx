@@ -67,6 +67,7 @@ export default function EditAnimal({ route, ...props }) {
         title="Eliminar animal"
         content={modalContent}
         functionOK={eliminarAnimal}
+        textoAceptacion={"Eliminar"}
       />
       <AnimalForm title={"Editar Animal"} initialData={animal} onSubmit={onSubmit} />
     </View>

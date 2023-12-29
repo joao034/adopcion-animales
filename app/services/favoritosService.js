@@ -4,7 +4,7 @@ import { FIREBASE_DB } from "../../FirebaseConfig";
 import { getUserId } from "./authService";
 
 
-const getAnimalesFavoritos = async (authUserId) => {
+const getAnimalesFavoritos= async (authUserId) => {
   try {
     const userId = await getUserId(authUserId);
     const userRef = doc(FIREBASE_DB, "users", userId);

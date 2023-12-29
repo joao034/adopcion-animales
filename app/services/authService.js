@@ -55,13 +55,14 @@ async function getUserData(uid) {
     }
   } catch (error) {
     console.error("error ->", error);
-    throw error; // Deberías propagar el error para manejarlo adecuadamente en el lugar donde se llama a getUserData
+    throw error;
   }
 }
 
-async function getUserId ( id ){
+//obtiene el id del usuario a traves del id de autenticacion
+async function getUserId ( authId ){
   try {
-    const q = query(collection(FIREBASE_DB, "users"), where("id", "==", id));
+    const q = query(collection(FIREBASE_DB, "users"), where("id", "==", authId));
     const querySnapshot = await getDocs(q);
     if (querySnapshot.size > 0) {
       const doc = querySnapshot.docs[0];

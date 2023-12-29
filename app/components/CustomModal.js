@@ -8,6 +8,7 @@ const CustomModal = ({
   title,
   content,
   functionOK,
+  textoAceptacion
 }) => {
   return (
     <Modal animationType="slide" transparent={true} visible={isModalVisible}>
@@ -17,7 +18,7 @@ const CustomModal = ({
           <View style={styles.modalBody}>{content}</View>
           <View style={styles.modalButtonContainer}>
             <TouchableOpacity style={styles.modalButton} onPress={functionOK}>
-              <Text style={styles.modalButtonText}>Sí</Text>
+              <Text style={styles.modalButtonText}>{textoAceptacion}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.modalButton}
@@ -25,7 +26,7 @@ const CustomModal = ({
                 setIsModalVisible(!isModalVisible);
               }}
             >
-              <Text style={styles.modalButtonText}>No</Text>
+              <Text style={styles.modalButtonText}>Cancelar</Text>
             </TouchableOpacity>
           </View>
         </View>

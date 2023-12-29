@@ -23,7 +23,13 @@ const Profile = ({ route, ...props }) => {
       headerRight: () => (
         <TouchableOpacity
           style={styles.button}
-          onPress={() => FIREBASE_AUTH.signOut()}
+          onPress={() => FIREBASE_AUTH.signOut()
+            .then(() => {
+              setIsLoggedIn(false);
+              setAuthUser(null);
+            })
+            .catch((error) => console.log("Error al cerrar sesión", error))
+          }
         >
           <Text style={styles.text_button}>Cerrar sesión</Text>
         </TouchableOpacity>

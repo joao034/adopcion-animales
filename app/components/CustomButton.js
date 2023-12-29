@@ -7,7 +7,7 @@ const CustomButton = ({
   type = "PRIMARY",
   bgColor,
   textColor,
-  disabled=false
+  disabled=false,
 }) => {
   return (
     <Pressable

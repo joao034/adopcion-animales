@@ -19,11 +19,11 @@ const ShowAnimal = ({ route, ...props }) => {
 
   const agregarEnFavoritos = async () => {
     try {
-      const success =  await addToFavorites(animalId, authUser.id);
-      if ( success ) {
+      const success = await addToFavorites(animalId, authUser.id);
+      if (success) {
         Alert.alert("Agregado a favoritos");
-      }else
-      {
+        props.navigation.navigate("Favorites", { animalId: animal.id }	);
+      } else {
         Alert.alert("El animal ya se encuentra en favoritos");
       }
     } catch (error) {

@@ -10,6 +10,8 @@ import {
 import { useEffect, useState, useLayoutEffect } from "react";
 import { getAnimales } from "../services/animalesService";
 import CustomCard from "../components/CustomCard";
+import CustomButton from "../components/CustomButton";
+import COLORS from "../consts/colors";
 
 const ListaMascotas = ({ route, ...props }) => {
   //Datos recibidos desde el componente padre
@@ -37,25 +39,12 @@ const ListaMascotas = ({ route, ...props }) => {
     getData();
   }, [route.params]);
 
-  /* useEffect(() => {
-    const unsubscribe = onSnapshot(collection(FIREBASE_DB, "animales"), (snapshot) => {
-      // listen to changes in the collection in firestore
-      snapshot.docChanges().forEach((change) => {
-        if (change.type === "added") {
-          // if a new file is added, add it to the state
-          console.log("New file", change.doc.data());
-          setAnimales((prevFiles) => [...prevFiles, change.doc.data()]);
-        }
-      });
-    });
-   
-    return () => unsubscribe();
-    // It is a good practice to unsubscribe to the listener when unmounting.
-    // Because if you don't, you will have a memory leak.
-  }, []); */
-
   return (
     <View style={styles.container}>
+      <View style={styles.button_container}>
+        <CustomButton />
+      </View>
+
       <FlatList
         data={animales}
         keyExtractor={(item) => item.id}
@@ -96,12 +85,16 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   text_button: {
-    color: "#c32c8b",
+    color: COLORS.primary,
   },
   image: {
     width: 140,
     height: 130,
     borderRadius: 5,
+  },
+  button_container: {
+    width: "70%",
+    alignSelf: "center",
   },
 });
 
