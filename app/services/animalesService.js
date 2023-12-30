@@ -8,13 +8,46 @@ import {
   deleteDoc,
   setDoc,
   where,
+  query,
 } from "firebase/firestore";
-import { getUserData, getUserRef } from "./authService";
 
 import * as FileSystem from "expo-file-system";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
-const getAnimales = async () => {
+const getAnimales = async (parametros) => {
+  try {
+    const { edad, sexo, tamanio } = parametros;
+    let animalesRef;
+
+    animalesRef = query(collection(FIREBASE_DB, "animales"));
+
+    //verificar que parametros no sea un objeto vacio
+    if (Object.keys(parametros).length !== 0) {
+      let whereArray = [];
+      if( edad && edad !== "Todos"){
+        whereArray.push(where("edad", "==", edad));
+      }
+      if( sexo && sexo !== "Todos"){
+        whereArray.push(where("sexo", "==", sexo));
+      }
+      if( tamanio & tamanio !== "Todos"){
+        whereArray.push(where("tamanio", "==", tamanio));
+      }
+      animalesRef = query(collection(FIREBASE_DB, "animales"), ...whereArray);
+    }
+
+    const querySnapshot = await getDocs(animalesRef);
+    const documents = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    return documents;
+  } catch (error) {
+    console.log("Error", error);
+  }
+};
+
+const getAnimales1 = async () => {
   try {
     const querySnapshot = await getDocs(collection(FIREBASE_DB, "animales"));
     const documents = querySnapshot.docs.map((doc) => ({

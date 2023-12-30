@@ -42,10 +42,6 @@ const AnimalForm = ({ title, initialData, onSubmit }) => {
     setEstado(initialData.estado);
   }, [initialData]);
 
-  /* useEffect(() => {
-    console.log(animal);
-  }, [animal]); */
-
   const tipoAnimal = [
     { label: "Perro", value: "Perro" },
     { label: "Gato", value: "Gato" },
@@ -150,20 +146,46 @@ const AnimalForm = ({ title, initialData, onSubmit }) => {
   };
 
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images, // All, Images, Videos
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+    try {
+      // No permissions request is necessary for launching the image library
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images, // All, Images, Videos
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
 
-    console.log(result);
+      console.log(result);
 
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-      uploadImage(result.assets[0].uri);
-      //onImageChange(result.assets[0].uri);
+      if (!result.canceled) {
+        setImage(result.assets[0].uri);
+        uploadImage(result.assets[0].uri);
+        //onImageChange(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const takePhoto = async () => {
+    try {
+      // No permissions request is necessary for launching the image library
+      let result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images, // All, Images, Videos
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+
+      console.log(result);
+      if (!result.canceled) {
+        console.log("result", result.assets[0].uri);
+        /* setImage(result.assets[0].uri);
+      uploadImage(result.assets[0].uri); */
+        //onImageChange(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -317,7 +339,7 @@ const AnimalForm = ({ title, initialData, onSubmit }) => {
           />
 
           <CustomDropdown
-          label={"Etapa de vida:"}
+            label={"Etapa de vida:"}
             data={dataEdad}
             value={edad || ""}
             onChange={(item) =>
