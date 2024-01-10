@@ -24,6 +24,7 @@ const ListaMascotas = ({ route, ...props }) => {
   const [sexo, setSexo] = useState("");
   const [edad, setEdad] = useState("");
   const [tamanio, setTamanio] = useState("");
+  const [estado, setEstado] = useState("En adopción");
   const [parametros, setParametros] = useState({});
 
   const [errors, setErrors] = useState({});
@@ -47,14 +48,16 @@ const ListaMascotas = ({ route, ...props }) => {
     { label: "Mediano", value: "Mediano" },
     { label: "Grande", value: "Grande" },
   ];
+  const dataEstado = [
+    { label: "Todos", value: "Todos"},
+    { label: "En adopción", value: "En adopción" },
+    { label: "En proceso", value: "En proceso" },
+    { label: "Adoptado", value: "Adoptado" },
+  ];
 
   const handleDropdownChange = (value, name) => {
     setParametros({ ...parametros, [name]: value });
   };
-
-  useEffect(() => {
-    console.log("parametros", parametros);  
-  }, [parametros]);
 
   useLayoutEffect(() => {
     if (authUser.perfil === "admin") {
@@ -74,6 +77,25 @@ const ListaMascotas = ({ route, ...props }) => {
 
   const modalContent = (
     <View style={styles.modal_container}>
+
+      {
+        authUser.perfil === "admin" ? (
+          <CustomDropdown
+            label={"Estado:"}
+            data={dataEstado}
+            value={parametros.estado || ""}
+            onChange={(item) => {
+              handleDropdownChange(item.value, "estado", setEstado(item.value));
+            }}
+            labelField="label"
+            valueField="value"
+            placeholder={"Seleccione el estado"}
+            search={false}
+            //error={errors.sexo}
+          />
+        ) : null
+      }
+
       <CustomDropdown
         label={"Sexo:"}
         data={dataSexo}

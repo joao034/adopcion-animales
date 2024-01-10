@@ -1,96 +1,112 @@
 import { View, Text } from "react-native";
-import { useState } from "react";
-import CustomDropdown from "../components/CustomDropdown";
-import { useEffect } from "react";
-
+import { GiftedChat } from "react-native-gifted-chat";
+import { useState, useEffect, useCallback } from "react";
+import { FIREBASE_AUTH, FIREBASE_DB } from "../../FirebaseConfig";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  onSnapshot,
+  orderBy,
+} from "firebase/firestore";
+import { getUserId } from "../services/authService";
 
 const Chat = () => {
-  const dogBreeds = [
-    { "label": "No determinada", "value": "No determinada" },
-    { "label": "Labrador Retriever", "value": "Labrador Retriever" },
-    { "label": "Bulldog", "value": "Bulldog" },
-    { "label": "Golden Retriever", "value": "Golden Retriever" },
-    { "label": "Pastor Alemán", "value": "Pastor Alemán" },
-    { "label": "Caniche", "value": "Caniche" },
-    { "label": "Beagle", "value": "Beagle" },
-    { "label": "Rottweiler", "value": "Rottweiler" },
-    { "label": "Yorkshire Terrier", "value": "Yorkshire Terrier" },
-    { "label": "Bulldog Francés", "value": "Bulldog Francés" },
-    { "label": "Boxer", "value": "Boxer" },
-    { "label": "Dálmata", "value": "Dálmata" },
-    { "label": "Doberman", "value": "Doberman" },
-    { "label": "Cocker Spaniel", "value": "Cocker Spaniel" },
-    { "label": "Pomerania", "value": "Pomerania" },
-    { "label": "Border Collie", "value": "Border Collie" },
-    { "label": "Shih Tzu", "value": "Shih Tzu" },
-    { "label": "Schnauzer", "value": "Schnauzer" },
-    { "label": "Bulldog Inglés", "value": "Bulldog Inglés" },
-    { "label": "Husky Siberiano", "value": "Husky Siberiano" },
-    { "label": "Chihuahua", "value": "Chihuahua" },
-    { "label": "Pug", "value": "Pug" },
-    { "label": "Poodle", "value": "Poodle" },
-    { "label": "Bichón Maltés", "value": "Bichón Maltés" },
-    { "label": "Dachshund", "value": "Dachshund" },
-    { "label": "Shar Pei", "value": "Shar Pei" },
-    { "label": "Papillón", "value": "Papillón" },
-    { "label": "Bóxer", "value": "Bóxer" },
-    { "label": "Terranova", "value": "Terranova" },
-    { "label": "Boston Terrier", "value": "Boston Terrier" },
-    { "label": "Greyhound", "value": "Greyhound" },
-    { "label": "Collie", "value": "Collie" },
-    { "label": "Basset Hound", "value": "Basset Hound" },
-    { "label": "San Bernardo", "value": "San Bernardo" },
-    { "label": "Gran Danés", "value": "Gran Danés" },
-    { "label": "Pequinés", "value": "Pequinés" },
-    { "label": "Galgo Español", "value": "Galgo Español" },
-    { "label": "Chow Chow", "value": "Chow Chow" },
-    { "label": "Bichón Frisé", "value": "Bichón Frisé" },
-    { "label": "Lhasa Apso", "value": "Lhasa Apso" },
-    { "label": "Setter Irlandés", "value": "Setter Irlandés" },
-    { "label": "Shiba Inu", "value": "Shiba Inu" },
-    { "label": "Fox Terrier", "value": "Fox Terrier" },
-    { "label": "Cane Corso", "value": "Cane Corso" },
-    { "label": "Bulldog Americano", "value": "Bulldog Americano" },
-    { "label": "Staffordshire Bull Terrier", "value": "Staffordshire Bull Terrier" },
-    { "label": "Corgi", "value": "Corgi" },
-    { "label": "Akita Inu", "value": "Akita Inu" },
-    { "label": "Bóxer Americano", "value": "Bóxer Americano" },
-    { "label": "Galgo Afgano", "value": "Galgo Afgano" },
-    { "label": "Leonberger", "value": "Leonberger" }
-  ]
-  
-  const [value, setValue] = useState(null);
-  const [breeds, setBreeds] = useState([]);
+  const [messages, setMessages] = useState([]);
 
+  //cargar mensajes
   useEffect(() => {
-    setBreeds(dogBreeds);
+    const getMessages = async () => {
+      const chatRef = collection(FIREBASE_DB, "chats");
+      const userId = getUserId(FIREBASE_AUTH.currentUser.id);
+      const q = query(
+        chatRef,
+        where("usuarioCliente.id", "==", userId),
+        orderBy("createdAt", "desc")
+      );
+
+      const dataMessages = await getDocs(q);
+
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        console.log("Snapshot");
+
+        setMessages(querySnapshot.docs.map((doc) => {}));
+      });
+
+      /* setMessages([
+      {
+        _id: 1,
+        text: "Hello developer",
+        createdAt: new Date(),
+        user: {
+          _id: 2,
+          name: "React Native",
+          avatar: "https://placeimg.com/140/140/any",
+        },
+      },
+    ]); */
+    };
+    getMessages();
   }, []);
 
-  /* async function getDogBreed() {
-    const response = await fetch(
-      "https://dog.ceo/api/breeds/list/all"
+  /* const renderMessages = (msgs) => {
+    const messages = [];
+    msgs.forEach((doc) => {
+      messages.push({
+        _id: doc.id,
+        text: doc.data().text,
+        createdAt: doc.data().createdAt.toDate(),
+        user: {
+          _id: doc.data().user._id,
+          name: doc.data().user.name,
+          avatar: doc.data().user.avatar,
+        },
+      });
+    });
+    return messages;
+  } */
+
+  const renderMessages = useCallback((msgs) => {
+    //structure for chat library:
+    // msg = {
+    //   _id: '',
+    //   user: {
+    //     avatar:'',
+    //     name: '',
+    //     _id: ''
+    //   }
+    // }
+
+    return msgs
+      ? msgs.reverse().map((msg, index) => ({
+          ...msg,
+          _id: index,
+          user: {
+            _id: FIREBASE_AUTH.currentUser.email,
+            avatar: "",
+            name: FIREBASE_AUTH.currentUser.email,
+          },
+        }))
+      : [];
+  }, []);
+
+  const onSend = useCallback((messages = []) => {
+    setMessages((previousMessages) =>
+      GiftedChat.append(previousMessages, messages)
     );
-    const data = await response.json();
-    const breeds = Object.keys(data.message);
-    setBreeds(breeds);
-  }
- */
-  onChange = (item) => {
-    setValue(item.value);
-  };
+
+    const { _id, text, createdAt, user } = messages[0];
+  }, []);
 
   return (
-    <View>
-      <CustomDropdown
-        data={breeds}
-        value={value}
-        onChange={onChange}
-        placeholder={"Selecciona la raza del animal"}
-        searchPlaceholder="Buscar la raza del animal"
-        labelField="label"
-        valueField="value"
-      />
-    </View>
+    <GiftedChat
+      messages={messages}
+      onSend={(messages) => onSend(messages)}
+      user={{
+        _id: FIREBASE_AUTH.currentUser.email,
+      }}
+    />
   );
 };
 

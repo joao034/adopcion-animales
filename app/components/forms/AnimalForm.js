@@ -44,7 +44,7 @@ const AnimalForm = ({ title, initialData, onSubmit }) => {
 
   const tipoAnimal = [
     { label: "Perro", value: "Perro" },
-    { label: "Gato", value: "Gato" },
+    //{ label: "Gato", value: "Gato" },
   ];
 
   const dataSexo = [
@@ -180,9 +180,8 @@ const AnimalForm = ({ title, initialData, onSubmit }) => {
       console.log(result);
       if (!result.canceled) {
         console.log("result", result.assets[0].uri);
-        /* setImage(result.assets[0].uri);
-      uploadImage(result.assets[0].uri); */
-        //onImageChange(result.assets[0].uri);
+        setImage(result.assets[0].uri);
+        uploadImage(result.assets[0].uri);
       }
     } catch (error) {
       console.log(error);
@@ -248,7 +247,7 @@ const AnimalForm = ({ title, initialData, onSubmit }) => {
       <View style={styles.container}>
         <Text style={styles.title}>{title}</Text>
         {/* <UploadMediaFile onImageChange={handleImageChange} /> */}
-        <TouchableOpacity onPress={pickImage}>
+        <TouchableOpacity onPress={takePhoto}>
           {animal.imagenUrl ? (
             <Image source={{ uri: animal.imagenUrl }} style={styles.image} />
           ) : (

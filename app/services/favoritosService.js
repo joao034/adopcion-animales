@@ -8,7 +8,7 @@ const getAnimalesFavoritos= async (authUserId) => {
   try {
     const userId = await getUserId(authUserId);
     const userRef = doc(FIREBASE_DB, "users", userId);
-    const userSnapshot = await getDoc(userRef);
+     useconstrSnapshot = await getDoc(userRef);
 
     if (userSnapshot.exists()) {
       const user = userSnapshot.data();

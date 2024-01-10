@@ -16,7 +16,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 const getAnimales = async (parametros) => {
   try {
-    const { edad, sexo, tamanio } = parametros;
+    const { edad, sexo, tamanio, estado } = parametros;
     let animalesRef;
 
     animalesRef = query(collection(FIREBASE_DB, "animales"));
@@ -33,6 +33,9 @@ const getAnimales = async (parametros) => {
       if( tamanio & tamanio !== "Todos"){
         whereArray.push(where("tamanio", "==", tamanio));
       }
+      if( estado && estado !== "Todos"){
+        whereArray.push(where("estado", "==", estado));
+      }
       animalesRef = query(collection(FIREBASE_DB, "animales"), ...whereArray);
     }
 
@@ -44,19 +47,6 @@ const getAnimales = async (parametros) => {
     return documents;
   } catch (error) {
     console.log("Error", error);
-  }
-};
-
-const getAnimales1 = async () => {
-  try {
-    const querySnapshot = await getDocs(collection(FIREBASE_DB, "animales"));
-    const documents = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    return documents;
-  } catch (error) {
-    console.log(error);
   }
 };
 
