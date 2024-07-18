@@ -7,6 +7,7 @@ Administrador: Puede agregar y editar información sobre los animales, así como
 Cliente: Puede visualizar los animales disponibles para adopción y realizar solicitudes de adopción.
 Requisitos Previos
 Antes de comenzar, asegúrate de tener instalados los siguientes componentes:
+![2024-07-18_12h25_40](https://github.com/user-attachments/assets/071de11a-e14f-4991-8e50-a002216603ba)
 
 Node.js
 Expo CLI
